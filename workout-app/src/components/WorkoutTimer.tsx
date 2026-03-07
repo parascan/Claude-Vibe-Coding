@@ -233,6 +233,23 @@ export function WorkoutTimer({ workout, onEnd }: Props) {
         <div className="timer-weight-badge">
           🏋️ {displayStation.exercise.startWeight}
         </div>
+
+        {/* Demo images */}
+        {displayStation.exercise.demoImages && phase !== "round-rest" && (
+          <div className="timer-demo-images">
+            {displayStation.exercise.demoImages.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt={`${displayStation.exercise.name} position ${i + 1}`}
+                className="timer-demo-img"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Next up strip */}

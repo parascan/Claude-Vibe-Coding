@@ -825,6 +825,23 @@ body {
   background: #111;
 }
 
+/* Demo images inside the timer card */
+.timer-demo-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.timer-demo-img {
+  border-radius: 8px;
+  object-fit: cover;
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #111;
+}
+
 /* ===== Mobile tweaks ===== */
 @media (max-width: 400px) {
   .preset-grid {
