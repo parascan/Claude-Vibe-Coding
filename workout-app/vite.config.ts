@@ -4,6 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/Claude-Vibe-Coding/',
   plugins: [
     react(),
     VitePWA({
@@ -17,8 +18,8 @@ export default defineConfig({
         background_color: '#0f0f0f',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/',
-        start_url: '/',
+        scope: '/Claude-Vibe-Coding/',
+        start_url: '/Claude-Vibe-Coding/',
         icons: [
           {
             src: 'icons/icon-192.png',
