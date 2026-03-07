@@ -44,9 +44,12 @@ export function ExerciseCard({ station, workSeconds, restSeconds, isActive }: Pr
           </div>
         </div>
         <div className="timing-badge">
-          <span className="work-time">{workSeconds}s</span>
-          <span className="timing-sep">/</span>
-          <span className="rest-time">{restSeconds}s rest</span>
+          <div className="weight-badge">🏋️ {exercise.startWeight}</div>
+          <div>
+            <span className="work-time">{workSeconds}s</span>
+            <span className="timing-sep">/</span>
+            <span className="rest-time">{restSeconds}s rest</span>
+          </div>
         </div>
       </div>
 
