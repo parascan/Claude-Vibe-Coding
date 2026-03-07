@@ -1,5 +1,7 @@
+import { useState } from "react";
 import type { Workout } from "../lib/generator";
 import { ExerciseCard } from "./ExerciseCard";
+import { WorkoutTimer } from "./WorkoutTimer";
 
 interface Props {
   workout: Workout;
@@ -7,12 +9,29 @@ interface Props {
 }
 
 export function WorkoutDisplay({ workout, onReset }: Props) {
-  const { stations, rounds, workSeconds, restSeconds, transitionSeconds, roundRestSeconds, estimatedCalories } = workout;
+  const [timerActive, setTimerActive] = useState(false);
+  const {
+    stations,
+    rounds,
+    workSeconds,
+    restSeconds,
+    transitionSeconds,
+    roundRestSeconds,
+    estimatedCalories,
+  } = workout;
+
+  if (timerActive) {
+    return (
+      <WorkoutTimer workout={workout} onEnd={() => setTimerActive(false)} />
+    );
+  }
 
   return (
     <div className="workout-display">
       <div className="workout-header">
-        <button className="back-btn" onClick={onReset}>← New Workout</button>
+        <button className="back-btn" onClick={onReset}>
+          ← New Workout
+        </button>
         <h2>Your Workout</h2>
       </div>
 
@@ -35,12 +54,22 @@ export function WorkoutDisplay({ workout, onReset }: Props) {
         </div>
       </div>
 
+      <button
+        className="start-workout-btn"
+        onClick={() => setTimerActive(true)}
+      >
+        ▶ Start Workout
+      </button>
+
       <div className="how-it-works">
         <strong>How it works:</strong> Do each exercise for{" "}
         <span className="highlight">{workSeconds} seconds</span>, rest{" "}
-        <span className="highlight">{restSeconds} seconds</span>, then move to the
-        next station ({transitionSeconds}s to transition). Complete the circuit{" "}
-        <span className="highlight">{rounds} {rounds === 1 ? "time" : "times"}</span>
+        <span className="highlight">{restSeconds} seconds</span>, then move to
+        the next station ({transitionSeconds}s to transition). Complete the
+        circuit{" "}
+        <span className="highlight">
+          {rounds} {rounds === 1 ? "time" : "times"}
+        </span>
         {rounds > 1 && `, resting ${roundRestSeconds / 60} min between rounds`}.
       </div>
 
@@ -57,9 +86,12 @@ export function WorkoutDisplay({ workout, onReset }: Props) {
       </div>
 
       <div className="circuit-note">
-        <strong>💪 Circuit-style:</strong> Go through all {stations.length} stations
-        back-to-back. That's 1 round. Rest {roundRestSeconds / 60} min, then repeat
-        {rounds > 1 ? ` ${rounds - 1} more time${rounds > 2 ? "s" : ""}` : ""}.
+        <strong>💪 Circuit-style:</strong> Go through all {stations.length}{" "}
+        stations back-to-back. That's 1 round. Rest {roundRestSeconds / 60} min,
+        then repeat
+        {rounds > 1
+          ? ` ${rounds - 1} more time${rounds > 2 ? "s" : ""}`
+          : ""}.
       </div>
 
       <button className="generate-btn" onClick={onReset}>
