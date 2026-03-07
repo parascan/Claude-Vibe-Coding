@@ -851,6 +851,30 @@ body {
   padding-bottom: 2rem;
 }
 
+.route-type-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.route-type-btn {
+  background: #1c1c1c;
+  border: 2px solid #2d2d2d;
+  border-radius: 10px;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.7rem;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.route-type-btn.active {
+  border-color: #10b981;
+  color: #10b981;
+  background: #0f1f1a;
+}
+
 .route-distance-card {
   background: #1c1c1c;
   border-radius: 12px;
