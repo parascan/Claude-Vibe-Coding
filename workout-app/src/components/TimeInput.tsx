@@ -32,8 +32,8 @@ export function TimeInput({ onStart }: Props) {
       </div>
 
       <div className="tip-box">
-        <strong>Goal:</strong> Drop from 210 → 190–195 lbs with Spartacus-style
-        circuits. Aim for 3–4 sessions/week. Each workout adapts to your time.
+        <strong>Tip:</strong> Spartacus-style circuits are great for fat loss.
+        Aim for 3–4 sessions/week. Each workout adapts to your time.
       </div>
     </div>
   );
