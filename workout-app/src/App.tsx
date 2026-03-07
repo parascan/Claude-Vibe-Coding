@@ -3,6 +3,7 @@ import { ModeSelect } from "./components/ModeSelect";
 import { TimeInput } from "./components/TimeInput";
 import { WorkoutDisplay } from "./components/WorkoutDisplay";
 import { CardioDisplay } from "./components/CardioDisplay";
+import { CardioRoutePlanner } from "./components/CardioRoutePlanner";
 import { CardioTimer } from "./components/CardioTimer";
 import { generateWorkout } from "./lib/generator";
 import { generateCardioSessions } from "./lib/cardioGenerator";
@@ -17,6 +18,7 @@ export default function App() {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [cardioSessions, setCardioSessions] = useState<CardioSession[] | null>(null);
   const [activeCardioSession, setActiveCardioSession] = useState<CardioSession | null>(null);
+  const [cardioTimerActive, setCardioTimerActive] = useState(false);
 
   function handleModeSelect(selected: Mode) {
     setMode(selected);
@@ -35,12 +37,14 @@ export default function App() {
     setWorkout(null);
     setCardioSessions(null);
     setActiveCardioSession(null);
+    setCardioTimerActive(false);
   }
 
   function handleBackToTime() {
     setWorkout(null);
     setCardioSessions(null);
     setActiveCardioSession(null);
+    setCardioTimerActive(false);
   }
 
   return (
@@ -58,13 +62,26 @@ export default function App() {
         <CardioDisplay
           sessions={cardioSessions}
           onReset={handleBackToTime}
-          onStartTimer={setActiveCardioSession}
+          onStartTimer={(session) => {
+            setActiveCardioSession(session);
+            setCardioTimerActive(false);
+          }}
         />
       )}
-      {activeCardioSession !== null && (
+      {activeCardioSession !== null && !cardioTimerActive && (
+        <CardioRoutePlanner
+          session={activeCardioSession}
+          onStart={() => setCardioTimerActive(true)}
+          onBack={() => setActiveCardioSession(null)}
+        />
+      )}
+      {activeCardioSession !== null && cardioTimerActive && (
         <CardioTimer
           session={activeCardioSession}
-          onEnd={() => setActiveCardioSession(null)}
+          onEnd={() => {
+            setActiveCardioSession(null);
+            setCardioTimerActive(false);
+          }}
         />
       )}
     </div>
