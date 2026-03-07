@@ -766,6 +766,30 @@ body {
   padding: 0.6rem 1rem;
 }
 
+.start-cardio-timer-btn {
+  background: #3b82f6;
+  border: none;
+  border-radius: 0 0 12px 12px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  transition: background 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.start-cardio-timer-btn:hover,
+.start-cardio-timer-btn:active {
+  background: #2563eb;
+}
+
+/* Cardio timer — time display is m:ss so needs slightly smaller font */
+.cardio-timer-number {
+  font-size: 2rem !important;
+}
+
 /* ===== Mobile tweaks ===== */
 @media (max-width: 400px) {
   .preset-grid {

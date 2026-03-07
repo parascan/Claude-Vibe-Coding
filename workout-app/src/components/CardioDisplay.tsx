@@ -3,6 +3,7 @@ import type { CardioSession, CardioInterval } from "../lib/cardioGenerator";
 interface Props {
   sessions: CardioSession[];
   onReset: () => void;
+  onStartTimer: (session: CardioSession) => void;
 }
 
 const INTERVAL_COLORS: Record<CardioInterval["type"], string> = {
@@ -13,7 +14,7 @@ const INTERVAL_COLORS: Record<CardioInterval["type"], string> = {
   cooldown: "interval-cooldown",
 };
 
-export function CardioDisplay({ sessions, onReset }: Props) {
+export function CardioDisplay({ sessions, onReset, onStartTimer }: Props) {
   return (
     <div className="workout-display">
       <div className="workout-header">
@@ -66,6 +67,13 @@ export function CardioDisplay({ sessions, onReset }: Props) {
               <span className="tip-icon">💡</span>
               {session.activity.tip}
             </div>
+
+            <button
+              className="start-cardio-timer-btn"
+              onClick={() => onStartTimer(session)}
+            >
+              ▶ Start Timer with Audio Cues
+            </button>
           </div>
         ))}
       </div>
