@@ -10,6 +10,8 @@ export type MuscleGroup =
 
 export type Equipment = "selecttech-552" | "bodyweight";
 
+const DB = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises";
+
 export interface Exercise {
   id: string;
   name: string;
@@ -21,6 +23,8 @@ export interface Exercise {
   tip?: string;
   startWeight: string; // suggested starting weight on SelectTech 552
   isCardio: boolean;
+  /** Before/after demo images showing start and end positions */
+  demoImages?: [string, string];
 }
 
 export const EXERCISES: Exercise[] = [
@@ -37,6 +41,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 25 lb, dial up to 35–40 lb once form is solid. Go slow on the way down (3 counts).",
     startWeight: "25 lb",
     isCardio: false,
+    demoImages: [`${DB}/Goblet_Squat/0.jpg`, `${DB}/Goblet_Squat/1.jpg`],
   },
   {
     id: "dumbbell-reverse-lunge",
@@ -50,6 +55,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 15 lb each hand, progress to 25–30 lb. Keep your front knee over your ankle.",
     startWeight: "15 lb each",
     isCardio: false,
+    demoImages: [`${DB}/Dumbbell_Rear_Lunge/0.jpg`, `${DB}/Dumbbell_Rear_Lunge/1.jpg`],
   },
   {
     id: "split-jump",
@@ -63,6 +69,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Bodyweight only. If knees are sore, sub in alternating reverse lunges with 20 lb dumbbells.",
     startWeight: "bodyweight",
     isCardio: true,
+    demoImages: [`${DB}/Split_Jump/0.jpg`, `${DB}/Split_Jump/1.jpg`],
   },
   {
     id: "dumbbell-sumo-squat",
@@ -76,6 +83,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 30 lb, work up to 45–52.5 lb over time. Pause 1 second at the bottom.",
     startWeight: "30 lb",
     isCardio: false,
+    demoImages: [`${DB}/Dumbbell_Squat/0.jpg`, `${DB}/Dumbbell_Squat/1.jpg`],
   },
   {
     id: "step-up",
@@ -89,6 +97,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 15 lb each, progress to 25 lb. Use a step around knee height.",
     startWeight: "15 lb each",
     isCardio: false,
+    demoImages: [`${DB}/Dumbbell_Step_Ups/0.jpg`, `${DB}/Dumbbell_Step_Ups/1.jpg`],
   },
   // --- CHEST / PUSH ---
   {
@@ -103,6 +112,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Bodyweight. Drop to your knees if needed — quality over quantity.",
     startWeight: "bodyweight",
     isCardio: false,
+    demoImages: [`${DB}/Pushups/0.jpg`, `${DB}/Pushups/1.jpg`],
   },
   {
     id: "dumbbell-chest-press",
@@ -116,6 +126,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 20 lb each, dial up to 30–35 lb as you get stronger. 3 count down, explode up.",
     startWeight: "20 lb each",
     isCardio: false,
+    demoImages: [`${DB}/Dumbbell_Floor_Press/0.jpg`, `${DB}/Dumbbell_Floor_Press/1.jpg`],
   },
   {
     id: "t-pushup",
@@ -129,6 +140,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Use 15–20 lb or no weight at all. Balance is the challenge here.",
     startWeight: "15 lb each",
     isCardio: false,
+    demoImages: [`${DB}/Push_Up_to_Side_Plank/0.jpg`, `${DB}/Push_Up_to_Side_Plank/1.jpg`],
   },
   // --- BACK / PULL ---
   {
@@ -143,6 +155,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 25 lb each, progress to 35–40 lb. Pause 1 second at the top.",
     startWeight: "25 lb each",
     isCardio: false,
+    demoImages: [`${DB}/Bent_Over_Two-Dumbbell_Row/0.jpg`, `${DB}/Bent_Over_Two-Dumbbell_Row/1.jpg`],
   },
   {
     id: "single-arm-row",
@@ -156,6 +169,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 30 lb, progress to 40–45 lb. Pull with your back, not your arm.",
     startWeight: "30 lb",
     isCardio: false,
+    demoImages: [`${DB}/One-Arm_Dumbbell_Row/0.jpg`, `${DB}/One-Arm_Dumbbell_Row/1.jpg`],
   },
   // --- SHOULDERS ---
   {
@@ -170,6 +184,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 17.5–20 lb each, progress to 25–30 lb. Don't lock your elbows at the top.",
     startWeight: "17.5 lb each",
     isCardio: false,
+    demoImages: [`${DB}/Dumbbell_Shoulder_Press/0.jpg`, `${DB}/Dumbbell_Shoulder_Press/1.jpg`],
   },
   {
     id: "lateral-raise",
@@ -183,6 +198,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 10–12.5 lb each. Shoulders fatigue fast — slow and controlled beats heavy.",
     startWeight: "10 lb each",
     isCardio: false,
+    demoImages: [`${DB}/Side_Lateral_Raise/0.jpg`, `${DB}/Side_Lateral_Raise/1.jpg`],
   },
   // --- CORE ---
   {
@@ -197,6 +213,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Bodyweight. Keep it fast for more cardio, or slow it down to make it harder on your core.",
     startWeight: "bodyweight",
     isCardio: true,
+    demoImages: [`${DB}/Mountain_Climbers/0.jpg`, `${DB}/Mountain_Climbers/1.jpg`],
   },
   {
     id: "plank",
@@ -210,6 +227,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Bodyweight. Don't let your hips sag or pike up. Breathe steadily.",
     startWeight: "bodyweight",
     isCardio: false,
+    demoImages: [`${DB}/Plank/0.jpg`, `${DB}/Plank/1.jpg`],
   },
   {
     id: "dumbbell-russian-twist",
@@ -223,6 +241,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 10–12.5 lb, progress to 17.5–20 lb. Keep your back straight.",
     startWeight: "10 lb",
     isCardio: false,
+    demoImages: [`${DB}/Russian_Twist/0.jpg`, `${DB}/Russian_Twist/1.jpg`],
   },
   // --- FULL-BODY / CARDIO ---
   {
@@ -237,6 +256,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 25 lb, progress to 35–40 lb. Power comes from your hips, not your arms.",
     startWeight: "25 lb",
     isCardio: true,
+    demoImages: [`${DB}/One-Arm_Kettlebell_Swings/0.jpg`, `${DB}/One-Arm_Kettlebell_Swings/1.jpg`],
   },
   {
     id: "burpee",
@@ -250,6 +270,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Bodyweight. Step feet instead of jumping to protect your joints.",
     startWeight: "bodyweight",
     isCardio: true,
+    demoImages: [`${DB}/Bodyweight_Squat/0.jpg`, `${DB}/Bodyweight_Squat/1.jpg`],
   },
   {
     id: "dumbbell-thruster",
@@ -263,6 +284,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 17.5–20 lb each, progress to 25–30 lb. One of the best fat-burning moves you can do.",
     startWeight: "17.5 lb each",
     isCardio: true,
+    demoImages: [`${DB}/Kettlebell_Thruster/0.jpg`, `${DB}/Kettlebell_Thruster/1.jpg`],
   },
   {
     id: "pushup-position-row",
@@ -276,6 +298,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 20–25 lb. Keep your hips from rotating — that's where the core work is.",
     startWeight: "20 lb each",
     isCardio: false,
+    demoImages: [`${DB}/Alternating_Renegade_Row/0.jpg`, `${DB}/Alternating_Renegade_Row/1.jpg`],
   },
   {
     id: "dumbbell-side-lunge",
@@ -289,6 +312,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 15 lb each, progress to 22.5–25 lb. Keep the working knee aligned over your foot.",
     startWeight: "15 lb each",
     isCardio: false,
+    demoImages: [`${DB}/Dumbbell_Lunges/0.jpg`, `${DB}/Dumbbell_Lunges/1.jpg`],
   },
   {
     id: "dumbbell-lunge-rotation",
@@ -302,6 +326,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 12.5–15 lb. The rotation fires your core hard — don't rush it.",
     startWeight: "12.5 lb",
     isCardio: false,
+    demoImages: [`${DB}/Dumbbell_Lunges/0.jpg`, `${DB}/Dumbbell_Lunges/1.jpg`],
   },
   {
     id: "dumbbell-push-press",
@@ -315,5 +340,6 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 20 lb each, progress to 27.5–30 lb. Use the leg drive — that's what makes it a fat burner.",
     startWeight: "20 lb each",
     isCardio: true,
+    demoImages: [`${DB}/Push_Press/0.jpg`, `${DB}/Push_Press/1.jpg`],
   },
 ];

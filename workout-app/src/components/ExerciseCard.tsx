@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { WorkoutStation } from "../lib/generator";
 
 interface Props {
@@ -22,6 +23,7 @@ export function ExerciseCard({ station, workSeconds, restSeconds, isActive }: Pr
   const { exercise, stationNumber } = station;
   const primaryMuscle = exercise.muscles[0];
   const color = MUSCLE_COLORS[primaryMuscle] ?? "#6b7280";
+  const [showDemo, setShowDemo] = useState(false);
 
   return (
     <div className={`exercise-card ${isActive ? "active" : ""}`}>
@@ -54,6 +56,31 @@ export function ExerciseCard({ station, workSeconds, restSeconds, isActive }: Pr
       </div>
 
       <p className="card-instructions">{exercise.instructions}</p>
+
+      {exercise.demoImages && (
+        <button
+          className="demo-toggle-btn"
+          onClick={() => setShowDemo((s) => !s)}
+        >
+          {showDemo ? "▲ Hide Demo" : "▼ Show Demo"}
+        </button>
+      )}
+
+      {showDemo && exercise.demoImages && (
+        <div className="demo-images">
+          {exercise.demoImages.map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt={`${exercise.name} position ${i + 1}`}
+              className="demo-img"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).style.display = "none";
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {exercise.tip && (
         <div className="card-tip">

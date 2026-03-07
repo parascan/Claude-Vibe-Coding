@@ -790,6 +790,41 @@ body {
   font-size: 2rem !important;
 }
 
+/* ===== Exercise Demo Images ===== */
+.demo-toggle-btn {
+  background: #111;
+  border: none;
+  border-top: 1px solid #2d2d2d;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  width: 100%;
+  transition: color 0.15s, background 0.15s;
+}
+
+.demo-toggle-btn:hover {
+  color: #d1d5db;
+  background: #1a1a1a;
+}
+
+.demo-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 0 1rem 0.75rem;
+}
+
+.demo-img {
+  border-radius: 6px;
+  object-fit: cover;
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #111;
+}
+
 /* ===== Mobile tweaks ===== */
 @media (max-width: 400px) {
   .preset-grid {
