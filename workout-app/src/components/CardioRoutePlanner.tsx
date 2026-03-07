@@ -91,6 +91,11 @@ export function CardioRoutePlanner({ session, onStart, onBack }: Props) {
   const loopRadiusKm = totalKm / (2 * Math.PI);
   const outBackKm = totalKm / 2;
 
+  const KM_TO_MI = 0.621371;
+  const totalMi = totalKm * KM_TO_MI;
+  const loopRadiusMi = loopRadiusKm * KM_TO_MI;
+  const outBackMi = outBackKm * KM_TO_MI;
+
   async function searchAddress() {
     if (!address.trim()) return;
     setSearching(true);
@@ -136,15 +141,15 @@ export function CardioRoutePlanner({ session, onStart, onBack }: Props) {
         </div>
         <div className="route-stats-grid">
           <div className="route-stat">
-            <span className="route-stat-value">{totalKm.toFixed(1)} km</span>
+            <span className="route-stat-value">{totalMi.toFixed(1)} mi</span>
             <span className="route-stat-label">Total Distance</span>
           </div>
           <div className="route-stat">
-            <span className="route-stat-value">{outBackKm.toFixed(1)} km</span>
+            <span className="route-stat-value">{outBackMi.toFixed(1)} mi</span>
             <span className="route-stat-label">Out-&-Back</span>
           </div>
           <div className="route-stat">
-            <span className="route-stat-value">{(loopRadiusKm * 1000).toFixed(0)} m</span>
+            <span className="route-stat-value">{loopRadiusMi.toFixed(2)} mi</span>
             <span className="route-stat-label">Loop Radius</span>
           </div>
         </div>
