@@ -38,10 +38,12 @@ export function saveSettings(settings: AppSettings): void {
 export function daysUntil(monthDay: string): number {
   const [month, day] = monthDay.split('-').map(Number);
   const now = new Date();
+  // Normalize to midnight so the comparison is day-based, not ms-based
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const thisYear = new Date(now.getFullYear(), month - 1, day);
   const nextYear = new Date(now.getFullYear() + 1, month - 1, day);
-  const target = thisYear.getTime() >= now.getTime() ? thisYear : nextYear;
-  return Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+  const target = thisYear >= today ? thisYear : nextYear;
+  return Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
 export interface Reminder {

@@ -25,8 +25,13 @@ export default function AddItemModal({ kidColor, initialValues, onSave, onClose 
   useEffect(() => {
     nameRef.current?.focus();
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
 
   async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -70,7 +75,7 @@ export default function AddItemModal({ kidColor, initialValues, onSave, onClose 
           <button className="modal__close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
-        <form className="modal__body" onSubmit={handleSubmit}>
+        <form id="add-item-form" className="modal__body" onSubmit={handleSubmit}>
           {/* Photo upload */}
           <div className="photo-upload">
             {photo ? (
@@ -213,9 +218,9 @@ export default function AddItemModal({ kidColor, initialValues, onSave, onClose 
           <button type="button" className="btn-cancel" onClick={onClose}>Cancel</button>
           <button
             type="submit"
+            form="add-item-form"
             className="btn-save"
             disabled={!name.trim() || compressing}
-            onClick={handleSubmit}
           >
             {isEditing ? 'Save Changes' : 'Save to List'}
           </button>
