@@ -21,18 +21,20 @@ const EXAMPLES = [
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"] as const;
 type AllowedMime = (typeof ALLOWED_TYPES)[number];
 
+interface ImageState {
+  preview: string;
+  base64: string;
+  mimeType: AllowedMime;
+}
+
 export function HomeScreen({ onAnalyze, loading }: Props) {
   const [text, setText] = useState("");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
-  const [imageMimeType, setImageMimeType] = useState<AllowedMime | null>(null);
+  const [image, setImage] = useState<ImageState | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   function handleExample(label: string) {
     setText(label);
-    setImagePreview(null);
-    setImageBase64(null);
-    setImageMimeType(null);
+    setImage(null);
   }
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -45,25 +47,22 @@ export function HomeScreen({ onAnalyze, loading }: Props) {
     const reader = new FileReader();
     reader.onload = (ev) => {
       const dataUrl = ev.target?.result as string;
-      // Extract base64 part after comma
       const base64 = dataUrl.split(",")[1];
-      setImageBase64(base64);
-      setImageMimeType(file.type as AllowedMime);
-      setImagePreview(dataUrl);
+      setImage({ preview: dataUrl, base64, mimeType: file.type as AllowedMime });
     };
     reader.readAsDataURL(file);
   }
 
   function handleSubmit() {
-    if (!text.trim() && !imageBase64) return;
+    if (!text.trim() && !image) return;
     onAnalyze({
       text: text.trim() || undefined,
-      imageBase64: imageBase64 ?? undefined,
-      imageMimeType: imageMimeType ?? undefined,
+      imageBase64: image?.base64,
+      imageMimeType: image?.mimeType,
     });
   }
 
-  const canSubmit = (text.trim().length > 0 || !!imageBase64) && !loading;
+  const canSubmit = (text.trim().length > 0 || !!image) && !loading;
 
   return (
     <div className="home-screen">
@@ -109,15 +108,13 @@ export function HomeScreen({ onAnalyze, loading }: Props) {
             onClick={() => fileRef.current?.click()}
             disabled={loading}
           >
-            📷 {imagePreview ? "Change photo" : "Upload photo"}
+            📷 {image ? "Change photo" : "Upload photo"}
           </button>
-          {imagePreview && (
+          {image && (
             <button
               className="remove-photo-btn"
               onClick={() => {
-                setImagePreview(null);
-                setImageBase64(null);
-                setImageMimeType(null);
+                setImage(null);
                 if (fileRef.current) fileRef.current.value = "";
               }}
             >
@@ -127,15 +124,15 @@ export function HomeScreen({ onAnalyze, loading }: Props) {
           <input
             ref={fileRef}
             type="file"
-            accept="image/jpeg,image/png,image/gif,image/webp"
+            accept={ALLOWED_TYPES.join(",")}
             style={{ display: "none" }}
             onChange={handleFile}
           />
         </div>
 
-        {imagePreview && (
+        {image && (
           <div className="image-preview-wrap">
-            <img src={imagePreview} alt="Uploaded part" className="image-preview" />
+            <img src={image.preview} alt="Uploaded part" className="image-preview" />
           </div>
         )}
       </div>
@@ -153,10 +150,6 @@ export function HomeScreen({ onAnalyze, loading }: Props) {
           "Analyze Manufacturing Process"
         )}
       </button>
-
-      <div className="api-note">
-        Requires <code>VITE_ANTHROPIC_API_KEY</code> in <code>.env</code>
-      </div>
     </div>
   );
 }

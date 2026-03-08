@@ -82,6 +82,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       messages: [{ role: "user", content }],
     });
 
+    if (!response.content.length) {
+      return res.status(500).json({ error: "Empty response from Claude API." });
+    }
     const raw = response.content[0];
     if (raw.type !== "text") {
       return res.status(500).json({ error: "Unexpected response type." });

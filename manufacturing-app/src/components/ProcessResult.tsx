@@ -1,4 +1,4 @@
-import type { ManufacturingAnalysis } from "../lib/claude";
+import type { ManufacturingAnalysis, ProcessId } from "../lib/claude";
 import { ProcessAnimation } from "./ProcessAnimation";
 
 interface Props {
@@ -6,7 +6,7 @@ interface Props {
   onReset: () => void;
 }
 
-const PROCESS_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+const PROCESS_COLORS: Record<ProcessId, { bg: string; text: string; border: string }> = {
   "injection-molding": { bg: "#1a2e1a", text: "#86efac", border: "#1e3a1e" },
   "cnc-milling":       { bg: "#1a1a2e", text: "#93c5fd", border: "#1e2040" },
   "cnc-turning":       { bg: "#1a1a2e", text: "#93c5fd", border: "#1e2040" },
