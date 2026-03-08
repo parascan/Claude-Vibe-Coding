@@ -17,7 +17,8 @@ Respond with ONLY valid JSON matching this exact structure:
       "step": 1,
       "title": "string — step name",
       "description": "string — what happens in this step (1-2 sentences)",
-      "detail": "string — engineering detail, parameter, or pro tip for this step"
+      "detail": "string — engineering detail, parameter, or pro tip for this step",
+      "stepType": "string — one of: heat | press | cut | inject | cool | eject | finish | inspect | coat | weld | assemble | drill | form | clean | generic"
     }
   ],
   "keyFacts": ["string — cycle time, tolerance, tooling cost, production volume, etc. (4-6 facts)"],

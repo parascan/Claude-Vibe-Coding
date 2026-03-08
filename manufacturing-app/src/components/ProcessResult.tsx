@@ -1,5 +1,6 @@
 import type { ManufacturingAnalysis, ProcessId } from "../lib/claude";
 import { ProcessAnimation } from "./ProcessAnimation";
+import { StepIcon } from "./StepIcon";
 
 interface Props {
   analysis: ManufacturingAnalysis;
@@ -73,6 +74,7 @@ export function ProcessResult({ analysis, onReset }: Props) {
                   <div className="step-title">{s.title}</div>
                   <div className="step-desc">{s.description}</div>
                 </div>
+                <StepIcon stepType={s.stepType ?? "generic"} accentColor={colors.text} />
               </div>
               {s.detail && (
                 <div className="step-detail">

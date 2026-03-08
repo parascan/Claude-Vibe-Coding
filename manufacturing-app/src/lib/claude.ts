@@ -11,11 +11,29 @@ export type ProcessId =
   | "thermoforming"
   | "unknown";
 
+export type StepType =
+  | "heat"
+  | "press"
+  | "cut"
+  | "inject"
+  | "cool"
+  | "eject"
+  | "finish"
+  | "inspect"
+  | "coat"
+  | "weld"
+  | "assemble"
+  | "drill"
+  | "form"
+  | "clean"
+  | "generic";
+
 export interface ManufacturingStep {
   step: number;
   title: string;
   description: string;
   detail: string;
+  stepType: StepType;
 }
 
 export interface ManufacturingAnalysis {
