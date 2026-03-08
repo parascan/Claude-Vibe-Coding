@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Kid, NewWishItem, Occasion, Priority, WishItem } from '../types';
+import { Kid, KidId, NewWishItem, Occasion, Priority, WishItem } from '../types';
 import WishItemCard from './WishItemCard';
 import AddItemModal from './AddItemModal';
 
@@ -9,15 +9,20 @@ type PriorityFilter = Priority | 'all';
 interface Props {
   kid: Kid;
   items: WishItem[];
+  allKids: Kid[];
   onItemsChange: (items: WishItem[]) => void;
   onBack: () => void;
+  onCopyItem: (toKidId: KidId, item: WishItem) => void;
 }
 
-export default function WishList({ kid, items, onItemsChange, onBack }: Props) {
+export default function WishList({ kid, items, allKids, onItemsChange, onBack, onCopyItem }: Props) {
   const [filterOccasion, setFilterOccasion] = useState<OccasionFilter>('all');
   const [filterPriority, setFilterPriority] = useState<PriorityFilter>('all');
   const [showBought, setShowBought] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [editingItem, setEditingItem] = useState<WishItem | null>(null);
+
+  const otherKids = allKids.filter(k => k.id !== kid.id);
 
   const filtered = items.filter(item => {
     if (!showBought && item.bought) return false;
@@ -36,6 +41,13 @@ export default function WishList({ kid, items, onItemsChange, onBack }: Props) {
     onItemsChange([newItem, ...items]);
   }
 
+  function handleSaveEdit(data: NewWishItem) {
+    if (!editingItem) return;
+    onItemsChange(items.map(i =>
+      i.id === editingItem.id ? { ...i, ...data } : i
+    ));
+  }
+
   function handleToggleBought(id: string) {
     onItemsChange(items.map(i => i.id === id ? { ...i, bought: !i.bought } : i));
   }
@@ -44,7 +56,18 @@ export default function WishList({ kid, items, onItemsChange, onBack }: Props) {
     onItemsChange(items.filter(i => i.id !== id));
   }
 
+  function handleClaim(id: string, claimedBy: string | undefined) {
+    onItemsChange(items.map(i => i.id === id ? { ...i, claimedBy } : i));
+  }
+
   const boughtCount = items.filter(i => i.bought).length;
+
+  // Budget stats
+  const priced = items.filter(i => i.price != null);
+  const totalBudget = priced.reduce((s, i) => s + (i.price ?? 0), 0);
+  const boughtBudget = priced.filter(i => i.bought).reduce((s, i) => s + (i.price ?? 0), 0);
+  const remainingBudget = totalBudget - boughtBudget;
+  const showBudget = priced.length > 0;
 
   return (
     <div
@@ -54,6 +77,9 @@ export default function WishList({ kid, items, onItemsChange, onBack }: Props) {
       <header className="wl-header">
         <button className="wl-header__back" onClick={onBack}>← Back</button>
         <span className="wl-header__title">{kid.emoji} {kid.name}'s List</span>
+        <button className="wl-header__print" onClick={() => window.print()} title="Print list">
+          🖨️
+        </button>
         <button className="wl-header__add" onClick={() => setShowAdd(true)}>+ Add</button>
       </header>
 
@@ -89,26 +115,26 @@ export default function WishList({ kid, items, onItemsChange, onBack }: Props) {
             className={`filter-toggle${showBought ? ' active' : ''}`}
             onClick={() => setShowBought(v => !v)}
           >
-            {showBought ? `✓ Hiding bought` : `Show bought (${boughtCount})`}
+            {showBought ? 'Hide bought' : `Show bought (${boughtCount})`}
           </button>
         )}
       </div>
 
+      {showBudget && (
+        <div className="wl-budget">
+          <span>~${remainingBudget.toFixed(0)} remaining</span>
+          {boughtBudget > 0 && <span className="budget-bought">✓ ~${boughtBudget.toFixed(0)} bought</span>}
+          <span className="budget-total">~${totalBudget.toFixed(0)} total</span>
+        </div>
+      )}
+
       <div className="wl-content">
         {filtered.length === 0 ? (
           <div className="wl-empty">
-            <span className="empty-icon">
-              {items.length === 0 ? '🎁' : '🔍'}
-            </span>
-            <p>
-              {items.length === 0
-                ? `${kid.name}'s list is empty`
-                : 'No items match these filters'}
-            </p>
+            <span className="empty-icon">{items.length === 0 ? '🎁' : '🔍'}</span>
+            <p>{items.length === 0 ? `${kid.name}'s list is empty` : 'No items match these filters'}</p>
             {items.length === 0 && (
-              <p className="empty-hint">
-                Tap "+ Add" to start adding things they want
-              </p>
+              <p className="empty-hint">Tap "+ Add" to start adding things they want</p>
             )}
           </div>
         ) : (
@@ -117,8 +143,12 @@ export default function WishList({ kid, items, onItemsChange, onBack }: Props) {
               <WishItemCard
                 key={item.id}
                 item={item}
+                otherKids={otherKids}
+                onEdit={() => setEditingItem(item)}
                 onToggleBought={() => handleToggleBought(item.id)}
                 onDelete={() => handleDelete(item.id)}
+                onClaim={claimedBy => handleClaim(item.id, claimedBy)}
+                onCopyTo={kidId => onCopyItem(kidId, item)}
               />
             ))}
           </div>
@@ -130,6 +160,15 @@ export default function WishList({ kid, items, onItemsChange, onBack }: Props) {
           kidColor={kid.color}
           onSave={handleAdd}
           onClose={() => setShowAdd(false)}
+        />
+      )}
+
+      {editingItem && (
+        <AddItemModal
+          kidColor={kid.color}
+          initialValues={editingItem}
+          onSave={handleSaveEdit}
+          onClose={() => setEditingItem(null)}
         />
       )}
     </div>

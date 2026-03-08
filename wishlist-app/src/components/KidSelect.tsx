@@ -4,9 +4,10 @@ interface Props {
   kids: Kid[];
   itemsByKid: Record<KidId, WishItem[]>;
   onSelect: (id: KidId) => void;
+  onOpenSettings: () => void;
 }
 
-export default function KidSelect({ kids, itemsByKid, onSelect }: Props) {
+export default function KidSelect({ kids, itemsByKid, onSelect, onOpenSettings }: Props) {
   return (
     <div className="ks-page">
       <header className="ks-header">
@@ -21,6 +22,9 @@ export default function KidSelect({ kids, itemsByKid, onSelect }: Props) {
           const total = items.length;
           const highPriority = items.filter(i => i.priority === 'high' && !i.bought).length;
           const bought = items.filter(i => i.bought).length;
+          const withPrice = items.filter(i => i.price != null);
+          const budget = withPrice.reduce((s, i) => s + (i.price ?? 0), 0);
+          const remaining = withPrice.filter(i => !i.bought).reduce((s, i) => s + (i.price ?? 0), 0);
 
           return (
             <button
@@ -40,6 +44,9 @@ export default function KidSelect({ kids, itemsByKid, onSelect }: Props) {
                   {bought > 0 && (
                     <span className="stat stat--bought">✓ {bought} bought</span>
                   )}
+                  {budget > 0 && (
+                    <span className="stat stat--budget">~${remaining.toFixed(0)} left</span>
+                  )}
                 </div>
               </div>
               <div className="kid-card__arrow">→</div>
@@ -47,6 +54,10 @@ export default function KidSelect({ kids, itemsByKid, onSelect }: Props) {
           );
         })}
       </div>
+
+      <button className="ks-settings-btn" onClick={onOpenSettings} aria-label="Settings">
+        ⚙️ Settings
+      </button>
     </div>
   );
 }

@@ -1,19 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
-import { NewWishItem, Occasion, Priority } from '../types';
+import { NewWishItem, Occasion, Priority, WishItem } from '../types';
 import { compressImage } from '../imageUtils';
 
 interface Props {
   kidColor: string;
+  initialValues?: WishItem; // if provided → edit mode
   onSave: (item: NewWishItem) => void;
   onClose: () => void;
 }
 
-export default function AddItemModal({ kidColor, onSave, onClose }: Props) {
-  const [name, setName] = useState('');
-  const [photo, setPhoto] = useState<string | undefined>();
-  const [priority, setPriority] = useState<Priority>('medium');
-  const [occasion, setOccasion] = useState<Occasion>('any');
-  const [notes, setNotes] = useState('');
+export default function AddItemModal({ kidColor, initialValues, onSave, onClose }: Props) {
+  const isEditing = !!initialValues;
+
+  const [name, setName] = useState(initialValues?.name ?? '');
+  const [photo, setPhoto] = useState<string | undefined>(initialValues?.photo);
+  const [link, setLink] = useState(initialValues?.link ?? '');
+  const [price, setPrice] = useState(initialValues?.price != null ? String(initialValues.price) : '');
+  const [priority, setPriority] = useState<Priority>(initialValues?.priority ?? 'medium');
+  const [occasion, setOccasion] = useState<Occasion>(initialValues?.occasion ?? 'any');
+  const [notes, setNotes] = useState(initialValues?.notes ?? '');
   const [compressing, setCompressing] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -28,8 +33,7 @@ export default function AddItemModal({ kidColor, onSave, onClose }: Props) {
     if (!file) return;
     setCompressing(true);
     try {
-      const compressed = await compressImage(file);
-      setPhoto(compressed);
+      setPhoto(await compressImage(file));
     } catch {
       alert('Could not load that image. Please try another.');
     } finally {
@@ -40,7 +44,17 @@ export default function AddItemModal({ kidColor, onSave, onClose }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) return;
-    onSave({ name: name.trim(), photo, priority, occasion, notes: notes.trim() });
+    const parsedPrice = parseFloat(price);
+    onSave({
+      name: name.trim(),
+      photo,
+      link: link.trim() || undefined,
+      price: isNaN(parsedPrice) || price.trim() === '' ? undefined : parsedPrice,
+      priority,
+      occasion,
+      notes: notes.trim(),
+      claimedBy: initialValues?.claimedBy,
+    });
     onClose();
   }
 
@@ -52,7 +66,7 @@ export default function AddItemModal({ kidColor, onSave, onClose }: Props) {
     >
       <div className="modal" onClick={e => e.stopPropagation()}>
         <div className="modal__header">
-          <h2>Add Wish List Item</h2>
+          <h2>{isEditing ? 'Edit Item' : 'Add Wish List Item'}</h2>
           <button className="modal__close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
@@ -101,13 +115,39 @@ export default function AddItemModal({ kidColor, onSave, onClose }: Props) {
             />
           </div>
 
+          {/* Price + Link row */}
+          <div className="form-row">
+            <div className="form-field">
+              <label htmlFor="item-price">Est. price ($)</label>
+              <input
+                id="item-price"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="e.g. 49.99"
+                value={price}
+                onChange={e => setPrice(e.target.value)}
+              />
+            </div>
+            <div className="form-field form-field--grow">
+              <label htmlFor="item-link">Product link</label>
+              <input
+                id="item-link"
+                type="url"
+                placeholder="https://amazon.com/..."
+                value={link}
+                onChange={e => setLink(e.target.value)}
+              />
+            </div>
+          </div>
+
           {/* Priority */}
           <div className="form-field">
             <label>Priority</label>
             <div className="radio-group">
               {([
-                { value: 'high',   label: '🔴 Must have',  color: '#dc2626' },
-                { value: 'medium', label: '🟡 Would love',  color: '#d97706' },
+                { value: 'high',   label: '🔴 Must have',   color: '#dc2626' },
+                { value: 'medium', label: '🟡 Would love',   color: '#d97706' },
                 { value: 'low',    label: '🟢 Nice to have', color: '#16a34a' },
               ] as const).map(opt => (
                 <label key={opt.value} className="radio-option">
@@ -162,7 +202,7 @@ export default function AddItemModal({ kidColor, onSave, onClose }: Props) {
             <label htmlFor="item-notes">Notes</label>
             <textarea
               id="item-notes"
-              placeholder="e.g. Saw this at Target, size medium, the blue one"
+              placeholder="e.g. Saw this at Target, the blue one, size medium"
               value={notes}
               onChange={e => setNotes(e.target.value)}
             />
@@ -177,7 +217,7 @@ export default function AddItemModal({ kidColor, onSave, onClose }: Props) {
             disabled={!name.trim() || compressing}
             onClick={handleSubmit}
           >
-            Save to List
+            {isEditing ? 'Save Changes' : 'Save to List'}
           </button>
         </div>
       </div>
