@@ -37,7 +37,7 @@ jobs:
 
       - name: Build wishlist app
         working-directory: wishlist-app
-        run: npm ci && npm run build -- --base=/wishlist/
+        run: npm ci && npm run build -- --base=/Claude-Vibe-Coding/wishlist/
 
       - name: Assemble site
         run: |
