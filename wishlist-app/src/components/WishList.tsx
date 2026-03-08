@@ -60,14 +60,21 @@ export default function WishList({ kid, items, allKids, onItemsChange, onBack, o
     onItemsChange(items.map(i => i.id === id ? { ...i, claimedBy } : i));
   }
 
-  const boughtCount = items.filter(i => i.bought).length;
-
-  // Budget stats
-  const priced = items.filter(i => i.price != null);
-  const totalBudget = priced.reduce((s, i) => s + (i.price ?? 0), 0);
-  const boughtBudget = priced.filter(i => i.bought).reduce((s, i) => s + (i.price ?? 0), 0);
+  // Single pass for all stats
+  let boughtCount = 0;
+  let totalBudget = 0;
+  let boughtBudget = 0;
+  let pricedCount = 0;
+  for (const item of items) {
+    if (item.bought) boughtCount++;
+    if (item.price != null) {
+      pricedCount++;
+      totalBudget += item.price;
+      if (item.bought) boughtBudget += item.price;
+    }
+  }
   const remainingBudget = totalBudget - boughtBudget;
-  const showBudget = priced.length > 0;
+  const showBudget = pricedCount > 0;
 
   return (
     <div
