@@ -70,22 +70,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     content.push({ type: "text", text: userText });
   }
 
-  const response = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 2048,
-    system: SYSTEM_PROMPT,
-    messages: [{ role: "user", content }],
-  });
+  try {
+    const response = await client.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 2048,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content }],
+    });
 
-  const raw = response.content[0];
-  if (raw.type !== "text") {
-    return res.status(500).json({ error: "Unexpected response type." });
+    const raw = response.content[0];
+    if (raw.type !== "text") {
+      return res.status(500).json({ error: "Unexpected response type." });
+    }
+
+    const jsonText = raw.text
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/\s*```$/, "")
+      .trim();
+
+    return res.status(200).json(JSON.parse(jsonText));
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Internal server error";
+    console.error("analyze error:", err);
+    return res.status(500).json({ error: message });
   }
-
-  const jsonText = raw.text
-    .replace(/^```(?:json)?\s*/i, "")
-    .replace(/\s*```$/, "")
-    .trim();
-
-  return res.status(200).json(JSON.parse(jsonText));
 }
