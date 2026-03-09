@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-      - claude/add-claude-documentation-ydJG1
-      - claude/add-claude-documentation-7SRJC
-    paths:
-      - 'workout-app/**'
   workflow_dispatch:
 
 permissions:
@@ -31,19 +27,13 @@ jobs:
         with:
           node-version: 20
 
-      - name: Build workout app
-        working-directory: workout-app
+      - name: Build
         run: npm ci && npm run build
-
-      - name: Assemble site
-        run: |
-          mkdir -p _site
-          cp -r workout-app/dist/. _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: dist
 
   deploy:
     needs: build
