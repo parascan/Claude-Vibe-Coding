@@ -70,16 +70,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     content.push({ type: "text", text: userText });
   }
 
-  const response = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 2048,
-    system: SYSTEM_PROMPT,
-    messages: [{ role: "user", content }],
-  });
+  let response;
+  try {
+    response = await client.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 2048,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content }],
+    });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Claude API request failed.";
+    const status =
+      typeof err === "object" && err !== null && "status" in err
+        ? (err as { status: number }).status
+        : 502;
+    return res.status(status).json({ error: msg });
+  }
 
   const raw = response.content[0];
   if (raw.type !== "text") {
-    return res.status(500).json({ error: "Unexpected response type." });
+    return res.status(500).json({ error: "Unexpected response type from Claude." });
   }
 
   const jsonText = raw.text
@@ -87,5 +97,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .replace(/\s*```$/, "")
     .trim();
 
-  return res.status(200).json(JSON.parse(jsonText));
+  let parsed;
+  try {
+    parsed = JSON.parse(jsonText);
+  } catch {
+    return res.status(500).json({ error: "Claude returned malformed JSON. Please try again." });
+  }
+
+  return res.status(200).json(parsed);
 }
