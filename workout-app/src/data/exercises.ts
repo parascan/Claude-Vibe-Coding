@@ -140,7 +140,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Use 15–20 lb or no weight at all. Balance is the challenge here.",
     startWeight: "15 lb each",
     isCardio: false,
-    demoImages: [`${DB}/Push_Up_to_Side_Plank/0.jpg`, `${DB}/Push_Up_to_Side_Plank/1.jpg`],
+    demoImages: [`${DB}/Pushup_to_Side_Plank/0.jpg`, `${DB}/Pushup_to_Side_Plank/1.jpg`],
   },
   // --- BACK / PULL ---
   {
@@ -199,6 +199,35 @@ export const EXERCISES: Exercise[] = [
     startWeight: "10 lb each",
     isCardio: false,
     demoImages: [`${DB}/Side_Lateral_Raise/0.jpg`, `${DB}/Side_Lateral_Raise/1.jpg`],
+  },
+  // --- ARMS / BICEPS ---
+  {
+    id: "dumbbell-bicep-curl",
+    name: "Dumbbell Bicep Curl",
+    muscles: ["arms"],
+    equipment: ["selecttech-552"],
+    workSeconds: 40,
+    restSeconds: 20,
+    instructions:
+      "Stand with dumbbells at your sides, palms facing forward. Curl both weights up toward your shoulders, keeping elbows pinned to your sides. Lower slowly under control.",
+    tip: "Start at 17.5–20 lb each. Slow the lowering phase to 3 counts — that's where the gains are.",
+    startWeight: "17.5 lb each",
+    isCardio: false,
+    demoImages: [`${DB}/Dumbbell_Bicep_Curl/0.jpg`, `${DB}/Dumbbell_Bicep_Curl/1.jpg`],
+  },
+  {
+    id: "hammer-curl",
+    name: "Hammer Curl",
+    muscles: ["arms"],
+    equipment: ["selecttech-552"],
+    workSeconds: 40,
+    restSeconds: 20,
+    instructions:
+      "Hold dumbbells at your sides with palms facing each other (neutral grip). Curl both weights up, keeping elbows stationary. Lower slowly. Targets the brachialis and forearms.",
+    tip: "Start at 20 lb each. Keep your wrists straight — don't let them bend.",
+    startWeight: "20 lb each",
+    isCardio: false,
+    demoImages: [`${DB}/Hammer_Curls/0.jpg`, `${DB}/Hammer_Curls/1.jpg`],
   },
   // --- CORE ---
   {
@@ -270,7 +299,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Bodyweight. Step feet instead of jumping to protect your joints.",
     startWeight: "bodyweight",
     isCardio: true,
-    demoImages: [`${DB}/Bodyweight_Squat/0.jpg`, `${DB}/Bodyweight_Squat/1.jpg`],
+    demoImages: [`${DB}/Burpees/0.jpg`, `${DB}/Burpees/1.jpg`],
   },
   {
     id: "dumbbell-thruster",
@@ -326,7 +355,7 @@ export const EXERCISES: Exercise[] = [
     tip: "Start at 12.5–15 lb. The rotation fires your core hard — don't rush it.",
     startWeight: "12.5 lb",
     isCardio: false,
-    demoImages: [`${DB}/Dumbbell_Lunges/0.jpg`, `${DB}/Dumbbell_Lunges/1.jpg`],
+    demoImages: [`${DB}/Dumbbell_Walking_Lunge/0.jpg`, `${DB}/Dumbbell_Walking_Lunge/1.jpg`],
   },
   {
     id: "dumbbell-push-press",

@@ -57,7 +57,8 @@ export function WorkoutTimer({ workout, onEnd }: Props) {
 
   const progress = totalPhaseSeconds > 0 ? secondsLeft / totalPhaseSeconds : 0;
   const strokeDashoffset = CIRCUMFERENCE * (1 - progress);
-  const color = PHASE_COLOR[phase];
+  const color =
+    phase === "work" && secondsLeft <= 15 ? "#ef4444" : PHASE_COLOR[phase];
 
   // Derive which station card to show
   const displayIdx =
