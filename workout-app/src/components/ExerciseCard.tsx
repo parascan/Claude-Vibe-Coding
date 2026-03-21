@@ -6,6 +6,7 @@ interface Props {
   workSeconds: number;
   restSeconds: number;
   isActive: boolean;
+  onSwap?: () => void;
 }
 
 const MUSCLE_COLORS: Record<string, string> = {
@@ -19,7 +20,7 @@ const MUSCLE_COLORS: Record<string, string> = {
   "full-body": "#ef4444",
 };
 
-export function ExerciseCard({ station, workSeconds, restSeconds, isActive }: Props) {
+export function ExerciseCard({ station, workSeconds, restSeconds, isActive, onSwap }: Props) {
   const { exercise, stationNumber } = station;
   const primaryMuscle = exercise.muscles[0];
   const color = MUSCLE_COLORS[primaryMuscle] ?? "#6b7280";
@@ -53,6 +54,11 @@ export function ExerciseCard({ station, workSeconds, restSeconds, isActive }: Pr
             <span className="rest-time">{restSeconds}s rest</span>
           </div>
         </div>
+        {onSwap && (
+          <button className="swap-btn" onClick={onSwap} title="Swap exercise">
+            ⇄
+          </button>
+        )}
       </div>
 
       <p className="card-instructions">{exercise.instructions}</p>

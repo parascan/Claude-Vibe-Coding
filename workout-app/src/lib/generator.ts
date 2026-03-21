@@ -81,7 +81,33 @@ function selectExercises(count: number, includeCardio: boolean): Exercise[] {
     idx++;
   }
 
-  return selected;
+  // Reorder so no two adjacent exercises share a primary muscle group
+  return spreadExercises(selected);
+}
+
+// Greedy reorder: minimise muscle-group overlap between consecutive exercises
+function spreadExercises(exercises: Exercise[]): Exercise[] {
+  const result: Exercise[] = [];
+  const remaining = [...exercises];
+
+  while (remaining.length > 0) {
+    const lastMuscles = result.length > 0 ? result[result.length - 1].muscles : [];
+    let bestIdx = 0;
+    let bestOverlap = Infinity;
+    for (let i = 0; i < remaining.length; i++) {
+      const overlap = remaining[i].muscles.filter((m) =>
+        lastMuscles.includes(m)
+      ).length;
+      if (overlap < bestOverlap) {
+        bestOverlap = overlap;
+        bestIdx = i;
+      }
+    }
+    result.push(remaining[bestIdx]);
+    remaining.splice(bestIdx, 1);
+  }
+
+  return result;
 }
 
 export function generateWorkout(availableMinutes: number): Workout {
@@ -94,19 +120,19 @@ export function generateWorkout(availableMinutes: number): Workout {
 
   if (availableMinutes <= 15) {
     rounds = 1;
-    workSec = 40;
-    restSec = 20;
+    workSec = 60;
+    restSec = 15;
   } else if (availableMinutes <= 25) {
     rounds = 2;
-    workSec = 40;
-    restSec = 20;
+    workSec = 60;
+    restSec = 15;
   } else if (availableMinutes <= 40) {
     rounds = 2;
-    workSec = 45;
+    workSec = 60;
     restSec = 15;
   } else {
     rounds = 3;
-    workSec = 45;
+    workSec = 60;
     restSec = 15;
   }
 
