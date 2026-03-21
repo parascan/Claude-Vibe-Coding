@@ -8,6 +8,7 @@ on:
       - claude/add-claude-documentation-7SRJC
     paths:
       - 'workout-app/**'
+      - 'wishlist-app/**'
   workflow_dispatch:
 
 permissions:
@@ -35,10 +36,15 @@ jobs:
         working-directory: workout-app
         run: npm ci && npm run build
 
+      - name: Build wishlist app
+        working-directory: wishlist-app
+        run: npm ci && npm run build
+
       - name: Assemble site
         run: |
-          mkdir -p _site
+          mkdir -p _site/kids-wishlist
           cp -r workout-app/dist/. _site/
+          cp -r wishlist-app/dist/. _site/kids-wishlist/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

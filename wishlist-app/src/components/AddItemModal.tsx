@@ -21,6 +21,8 @@ export default function AddItemModal({ kidColor, initialValues, onSave, onClose 
   const [notes, setNotes] = useState(initialValues?.notes ?? '');
   const [compressing, setCompressing] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const uploadRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     nameRef.current?.focus();
@@ -76,36 +78,6 @@ export default function AddItemModal({ kidColor, initialValues, onSave, onClose 
         </div>
 
         <form id="add-item-form" className="modal__body" onSubmit={handleSubmit}>
-          {/* Photo upload */}
-          <div className="photo-upload">
-            {photo ? (
-              <>
-                <img className="photo-upload__preview" src={photo} alt="Preview" />
-                <button
-                  type="button"
-                  className="photo-upload__remove"
-                  onClick={e => { e.stopPropagation(); setPhoto(undefined); }}
-                  aria-label="Remove photo"
-                >
-                  ✕
-                </button>
-              </>
-            ) : (
-              <div className="photo-upload__hint">
-                <span className="upload-icon">{compressing ? '⏳' : '📷'}</span>
-                <span>{compressing ? 'Processing…' : 'Tap to add a photo'}</span>
-                <small>Photo of the toy, screenshot, catalog page, etc.</small>
-              </div>
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              onChange={handlePhotoChange}
-              disabled={compressing}
-            />
-          </div>
-
           {/* Name */}
           <div className="form-field">
             <label htmlFor="item-name">Item name *</label>
@@ -211,6 +183,57 @@ export default function AddItemModal({ kidColor, initialValues, onSave, onClose 
               value={notes}
               onChange={e => setNotes(e.target.value)}
             />
+          </div>
+
+          {/* Photo — optional, at bottom */}
+          <div className="form-field">
+            <label>Photo (optional)</label>
+            <div className={`photo-upload${photo ? ' photo-upload--filled' : ''}`}>
+            {photo ? (
+              <>
+                <img className="photo-upload__preview" src={photo} alt="Preview" />
+                <button
+                  type="button"
+                  className="photo-upload__remove"
+                  onClick={e => { e.stopPropagation(); setPhoto(undefined); }}
+                  aria-label="Remove photo"
+                >
+                  ✕
+                </button>
+              </>
+            ) : compressing ? (
+              <div className="photo-upload__hint">
+                <span className="upload-icon">⏳</span>
+                <span>Processing…</span>
+              </div>
+            ) : (
+              <div className="photo-upload__actions">
+                <button type="button" className="photo-btn" onClick={() => cameraRef.current?.click()}>
+                  📷 Take Photo
+                </button>
+                <button type="button" className="photo-btn" onClick={() => uploadRef.current?.click()}>
+                  🖼 Upload Image
+                </button>
+              </div>
+            )}
+            <input
+              ref={cameraRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handlePhotoChange}
+              disabled={compressing}
+              style={{ display: 'none' }}
+            />
+            <input
+              ref={uploadRef}
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              disabled={compressing}
+              style={{ display: 'none' }}
+            />
+            </div>
           </div>
         </form>
 
