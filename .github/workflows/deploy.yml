@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      - claude/add-claude-documentation-ydJG1
-      - claude/add-claude-documentation-7SRJC
     paths:
       - 'workout-app/**'
       - 'wishlist-app/**'
