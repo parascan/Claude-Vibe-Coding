@@ -444,7 +444,7 @@
   border-radius: 1.25rem 1.25rem 0 0;
   width: 100%;
   max-width: 540px;
-  max-height: 90vh;
+  max-height: 90dvh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.15);
@@ -510,7 +510,6 @@
 
 .photo-upload {
   width: 100%;
-  aspect-ratio: 4 / 3;
   border: 2px dashed #cbd5e1;
   border-radius: 0.75rem;
   background: #f8fafc;
@@ -522,6 +521,12 @@
   position: relative;
   overflow: hidden;
   transition: border-color 0.15s, background 0.15s;
+  padding: 0.85rem;
+}
+
+.photo-upload--filled {
+  aspect-ratio: 4 / 3;
+  padding: 0;
 }
 
 .photo-upload:hover {
@@ -591,24 +596,30 @@
 .photo-upload__actions {
   display: flex;
   gap: 0.75rem;
+  width: 100%;
 }
 
 .photo-btn {
   flex: 1;
-  padding: 0.6rem 0.5rem;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 8px;
+  padding: 0.65rem 0.5rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.6rem;
   background: white;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
 }
 
 .photo-btn:hover {
   border-color: var(--kid-color, #6366F1);
-  background: #f8fafc;
+  color: var(--kid-color, #6366F1);
+  background: color-mix(in srgb, var(--kid-color, #6366F1) 8%, white);
 }
 
 .form-field {
@@ -626,6 +637,8 @@
 }
 
 .form-field input[type="text"],
+.form-field input[type="number"],
+.form-field input[type="url"],
 .form-field textarea {
   width: 100%;
   padding: 0.65rem 0.85rem;
@@ -639,6 +652,8 @@
 }
 
 .form-field input[type="text"]:focus,
+.form-field input[type="number"]:focus,
+.form-field input[type="url"]:focus,
 .form-field textarea:focus {
   border-color: var(--kid-color, #6366F1);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--kid-color, #6366F1) 15%, transparent);
