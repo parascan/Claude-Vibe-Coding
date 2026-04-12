@@ -27,13 +27,27 @@ jobs:
         with:
           node-version: 22
 
+      - name: Debug versions
+        run: |
+          node --version
+          npm --version
+          ls -la
+
+      - name: Install workout app
+        working-directory: workout-app
+        run: npm install
+
       - name: Build workout app
         working-directory: workout-app
-        run: npm install && npm run build
+        run: npm run build
+
+      - name: Install wishlist app
+        working-directory: wishlist-app
+        run: npm install
 
       - name: Build wishlist app
         working-directory: wishlist-app
-        run: npm install && npm run build
+        run: npm run build
 
       - name: Assemble site
         run: |
