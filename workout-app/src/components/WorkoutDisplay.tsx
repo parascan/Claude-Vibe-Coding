@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Workout, WorkoutStation } from "../lib/generator";
 import { EXERCISES } from "../data/exercises";
-import type { Exercise } from "../data/exercises";
+import type { Exercise, MuscleGroup } from "../data/exercises";
 import { ExerciseCard } from "./ExerciseCard";
 import { WorkoutTimer } from "./WorkoutTimer";
 
@@ -21,8 +21,24 @@ const MUSCLE_COLORS: Record<string, string> = {
   "full-body": "#ef4444",
 };
 
-function getSimilarExercises(current: Exercise, usedIds: Set<string>): Exercise[] {
-  return EXERCISES
+// Mirror the pool logic from generator.ts so swaps stay within the mode's focus
+function getSwapPool(focusGroups?: MuscleGroup[]): Exercise[] {
+  if (!focusGroups) return EXERCISES;
+  const allowedFirst: MuscleGroup[] = [
+    ...focusGroups,
+    "shoulders",
+    "back",
+    "full-body",
+  ];
+  return EXERCISES.filter((e) => allowedFirst.includes(e.muscles[0]));
+}
+
+function getSimilarExercises(
+  current: Exercise,
+  usedIds: Set<string>,
+  pool: Exercise[]
+): Exercise[] {
+  return pool
     .filter((e) => e.id !== current.id && !usedIds.has(e.id))
     .filter((e) => e.muscles.some((m) => current.muscles.includes(m)))
     .sort((a, b) => {
@@ -56,9 +72,10 @@ export function WorkoutDisplay({ workout, onReset }: Props) {
   }
 
   const usedIds = new Set(stations.map((s) => s.exercise.id));
+  const swapPool = getSwapPool(workout.focusGroups);
   const swappingStation = swapIdx !== null ? stations[swapIdx] : null;
   const alternatives = swappingStation
-    ? getSimilarExercises(swappingStation.exercise, usedIds)
+    ? getSimilarExercises(swappingStation.exercise, usedIds, swapPool)
     : [];
 
   function handleSwap(replacement: Exercise) {

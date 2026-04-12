@@ -109,3 +109,41 @@ describe("generateWorkout — Legs Day focus", () => {
     expect(upperIsolation.length).toBe(0);
   });
 });
+
+describe("generateWorkout — Pull Day focus", () => {
+  it("sets the correct label", () => {
+    const workout = generateWorkout(20, ["back", "arms"]);
+    expect(workout.label).toBe("Pull Day Circuit");
+  });
+
+  it("stores focusGroups on the workout object", () => {
+    const workout = generateWorkout(20, ["back", "arms"]);
+    expect(workout.focusGroups).toEqual(["back", "arms"]);
+  });
+
+  it("generates mostly back or arm exercises", () => {
+    const workout = generateWorkout(30, ["back", "arms"]);
+    const pullMuscles = ["back", "arms"];
+    const pullCount = workout.stations.filter((s) =>
+      s.exercise.muscles.some((m) => pullMuscles.includes(m))
+    ).length;
+    expect(pullCount / workout.stations.length).toBeGreaterThanOrEqual(0.7);
+  });
+
+  it("does not include leg or glute primary exercises", () => {
+    const workout = generateWorkout(30, ["back", "arms"]);
+    const lowerBody = workout.stations.filter(
+      (s) =>
+        s.exercise.muscles[0] === "legs" || s.exercise.muscles[0] === "glutes"
+    );
+    expect(lowerBody.length).toBe(0);
+  });
+
+  it("does not include chest primary exercises", () => {
+    const workout = generateWorkout(30, ["back", "arms"]);
+    const chestOnly = workout.stations.filter(
+      (s) => s.exercise.muscles[0] === "chest"
+    );
+    expect(chestOnly.length).toBe(0);
+  });
+});

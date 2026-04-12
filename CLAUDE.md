@@ -8,7 +8,7 @@ This file provides guidance for AI assistants (Claude Code and similar) working 
 
 **Claude-Vibe-Coding** is a repository dedicated to AI-assisted development workflows using Anthropic's Claude models and Claude Code CLI. It serves as a reference implementation and playground for "vibe coding" — a development style where a developer works collaboratively with an AI assistant to rapidly prototype, build, and iterate on software.
 
-The primary application in this repository is a **Workout Generator** — a Progressive Web App (PWA) built with React and TypeScript that generates personalized strength and cardio workout sessions.
+The primary application in this repository is a **Workout Generator** — a Progressive Web App (PWA) built with React and TypeScript that generates personalized workout sessions across five modes: full-body strength, beach muscles (chest/arms/core), legs day, pull day (back/biceps), and cardio.
 
 ---
 
@@ -17,7 +17,7 @@ The primary application in this repository is a **Workout Generator** — a Prog
 ```
 Claude-Vibe-Coding/
 ├── CLAUDE.md                          # This file — AI assistant guidance
-├── workout.html                       # Standalone single-file HTML build (212 KB)
+├── workout.html                       # Standalone single-file HTML build (~430 KB)
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml                 # GitHub Pages CI/CD pipeline
@@ -29,6 +29,8 @@ Claude-Vibe-Coding/
     ├── tsconfig.app.json              # App-specific TS config
     ├── tsconfig.node.json             # Node/build TS config
     ├── eslint.config.js               # ESLint configuration
+    ├── scripts/
+    │   └── build-standalone.mjs      # Inlines dist into workout.html
     ├── public/
     │   ├── apple-touch-icon.png       # iOS app icon
     │   └── icons/
@@ -40,20 +42,22 @@ Claude-Vibe-Coding/
         ├── App.css                    # Main styles
         ├── index.css                  # Global styles
         ├── components/
-        │   ├── ModeSelect.tsx         # Strength vs Cardio mode picker
-        │   ├── TimeInput.tsx          # Duration input component
-        │   ├── WorkoutDisplay.tsx     # Strength workout plan display
+        │   ├── ModeSelect.tsx         # 5-mode picker (strength/beach/legs/pull/cardio)
+        │   ├── TimeInput.tsx          # Duration input with presets + custom entry
+        │   ├── WorkoutDisplay.tsx     # Workout plan display with swap modal
         │   ├── WorkoutTimer.tsx       # Live strength timer with audio cues
         │   ├── ExerciseCard.tsx       # Individual exercise card with demo images
         │   ├── CardioDisplay.tsx      # Cardio session selection UI
         │   ├── CardioRoutePlanner.tsx # Map-based route toggle (loop / out-and-back)
         │   └── CardioTimer.tsx        # Live cardio interval timer with audio
         ├── data/
-        │   ├── exercises.ts           # 40+ exercise definitions with demo images
+        │   ├── exercises.ts           # 65+ exercise definitions with demo images
         │   └── cardio.ts              # Cardio activity definitions (road & Peloton)
         └── lib/
-            ├── generator.ts           # Strength workout generation algorithm
-            └── cardioGenerator.ts     # Cardio session generation algorithm
+            ├── generator.ts           # Workout generation algorithm with focus groups
+            ├── generator.test.ts      # Vitest unit tests for generator
+            ├── cardioGenerator.ts     # Cardio session generation algorithm
+            └── cardioGenerator.test.ts # Vitest unit tests for cardioGenerator
 ```
 
 ---
@@ -68,21 +72,34 @@ Claude-Vibe-Coding/
 | Maps | Leaflet + react-leaflet | 1.9.4 / 5.0.0 |
 | PWA | vite-plugin-pwa | 1.2.0 |
 | Linting | ESLint | 9.39.1 |
+| Testing | Vitest | 4.x |
 | Deployment | GitHub Pages | — |
 
 ---
 
 ## Application Features
 
-### Strength Mode
+### Workout Modes
 
-- Generates time-based dumbbell circuit workouts (10–60+ minutes)
+The app has five modes, all sharing the same timer and display infrastructure:
+
+| Mode | Focus | Key muscles |
+|------|-------|-------------|
+| Strength Circuit | Full body | All groups, balanced rotation |
+| Beach Muscles | Upper push | Chest, arms (bi+tri), core |
+| Pull Day | Upper pull | Back, biceps, rear delts |
+| Legs Day | Lower body | Quads, hamstrings, glutes |
+| Cardio | Aerobic | Road running or Peloton cycling |
+
+### Strength / Focused Circuit Features
+
+- Generates time-based dumbbell circuit workouts (5–120 minutes, preset or custom entry)
 - Multi-round structure with configurable work/rest/transition periods
-- 40+ exercises targeting all major muscle groups
-- Equipment: SelectTech 552 dumbbells with weight recommendations
+- 65+ exercises with weight recommendations for SelectTech 552 dumbbells
+- Focus modes use `focusGroups` to bias exercise selection and pool filtering
+- Swap any exercise before starting — alternatives filtered to the active mode's pool
 - Demo images for each exercise (fetched from free exercise database)
-- Estimated calorie burn (~8 cal/min)
-- Live workout timer with slide animations and spoken audio cues
+- Live workout timer with slide animations and spoken audio cues (~8 cal/min estimate)
 
 ### Cardio Mode
 
@@ -97,7 +114,7 @@ Claude-Vibe-Coding/
 
 - Installable on iOS and Android home screens
 - Offline support via service worker caching
-- Standalone single-file HTML build (`workout.html`) as a fallback
+- Standalone single-file HTML build (`workout.html`) as a fallback — rebuild with `node scripts/build-standalone.mjs`
 
 ---
 
@@ -131,9 +148,15 @@ npm run dev       # Start Vite dev server (HMR enabled)
 npm run build     # TypeScript type-check + Vite production build
 npm run lint      # ESLint check across src/
 npm run preview   # Preview production build locally
+npm test          # Run Vitest unit tests (once)
+npm run test:watch  # Run Vitest in watch mode
 ```
 
-> **Note:** There is currently no automated test suite. The `npm test` script is not configured. When adding tests, use Vitest (already compatible with the Vite setup) and follow the test conventions below.
+After a build, rebuild the standalone HTML:
+
+```bash
+node scripts/build-standalone.mjs   # Outputs workout.html at repo root
+```
 
 ### Deployment
 
@@ -185,7 +208,7 @@ All top-level state lives in `App.tsx` using React `useState` hooks. State is pa
 
 Business logic is isolated in `src/lib/`:
 
-- `generator.ts` — Strength workout: binary search for optimal station count, priority rotation for balanced muscle group coverage, work/rest/transition time calculations.
+- `generator.ts` — `generateWorkout(minutes, focusGroups?)`: binary search for station count, priority rotation for muscle group coverage, optional `focusGroups` parameter to bias selection toward specific groups (beach/legs/pull modes). The `Workout` object includes `focusGroups` so `WorkoutDisplay` can filter swap alternatives to the same pool.
 - `cardioGenerator.ts` — Cardio session: interval strategy selection based on duration and activity type, effort-level sequencing.
 
 Components consume data from `src/data/` and call generators to produce typed workout objects rendered by display/timer components.
@@ -193,8 +216,17 @@ Components consume data from `src/data/` and call generators to produce typed wo
 ### Adding a New Exercise
 
 1. Add the definition to `src/data/exercises.ts` following the existing `Exercise` type shape.
-2. Include a `demoUrl` if a free image is available.
-3. Assign appropriate `muscleGroups` tags — the generator uses these for balanced rotation.
+2. Include `demoImages` pointing to the free exercise database if available.
+3. Assign appropriate `muscles` tags — the first entry is treated as the primary muscle for pool filtering in focused modes.
+
+### Adding a New Workout Mode
+
+1. Add `focusGroups` call in `App.tsx` `handleStart`.
+2. Add the mode string to the `Mode` type in `App.tsx`.
+3. Add a button to `ModeSelect.tsx`.
+4. Add a `CONFIG` entry in `TimeInput.tsx`.
+5. Add a label entry in the `focusLabels` map in `generator.ts` (key = sorted focus group names joined by comma).
+6. Add exercises to `exercises.ts` whose primary muscle (`muscles[0]`) falls in the focus groups.
 
 ### Adding a New Cardio Activity
 
@@ -253,19 +285,19 @@ Components consume data from `src/data/` and call generators to produce typed wo
 - Tests should be fast, deterministic, and isolated.
 - Prefer integration tests over mocking internal implementation details.
 
-### Recommended Setup (Vitest)
+### Setup (Vitest — already installed)
 
-Vitest is the recommended test runner — it integrates natively with Vite and requires minimal config. To add it:
+Vitest is configured and tests exist for both generators. Run them with:
 
 ```bash
-npm install -D vitest @vitest/ui
+npm test          # one-shot
+npm run test:watch  # watch mode
 ```
 
-Add to `package.json` scripts:
-```json
-"test": "vitest run",
-"test:watch": "vitest",
-"test:coverage": "vitest run --coverage"
+To add coverage reporting:
+```bash
+npm install -D @vitest/coverage-v8
+npx vitest run --coverage
 ```
 
 ### Test File Location

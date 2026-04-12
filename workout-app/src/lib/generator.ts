@@ -16,6 +16,7 @@ export interface Workout {
   roundRestSeconds: number;
   estimatedCalories: number;
   label?: string;
+  focusGroups?: MuscleGroup[];
 }
 
 // How many stations fit in a given time budget
@@ -171,6 +172,7 @@ export function generateWorkout(availableMinutes: number, focusGroups?: MuscleGr
   const focusLabels: Record<string, string> = {
     "arms,chest,core": "Beach Muscles Circuit",
     "glutes,legs": "Legs Day Circuit",
+    "arms,back": "Pull Day Circuit",
   };
   const label = focusGroups
     ? focusLabels[focusGroups.slice().sort().join(",")]
@@ -186,5 +188,6 @@ export function generateWorkout(availableMinutes: number, focusGroups?: MuscleGr
     roundRestSeconds: roundRestSec,
     estimatedCalories,
     label,
+    focusGroups,
   };
 }

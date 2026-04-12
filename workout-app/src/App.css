@@ -87,6 +87,64 @@ body {
   margin-top: 0.25rem;
 }
 
+.custom-time-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.custom-time-input {
+  background: #1c1c1c;
+  border: 2px solid #2d2d2d;
+  border-radius: 10px;
+  color: #f0f0f0;
+  font-size: 1rem;
+  padding: 0.6rem 0.75rem;
+  width: 7rem;
+  outline: none;
+  transition: border-color 0.15s;
+  /* hide the number input spin arrows */
+  -moz-appearance: textfield;
+}
+.custom-time-input::-webkit-outer-spin-button,
+.custom-time-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.custom-time-input:focus {
+  border-color: #e07b39;
+}
+.custom-time-input::placeholder {
+  color: #4b5563;
+}
+
+.custom-time-unit {
+  color: #6b7280;
+  font-size: 0.88rem;
+  flex-shrink: 0;
+}
+
+.custom-time-btn {
+  background: #e07b39;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.6rem 1.1rem;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.custom-time-btn:hover {
+  background: #c9692b;
+}
+.custom-time-btn:disabled {
+  background: #2d2d2d;
+  color: #4b5563;
+  cursor: not-allowed;
+}
+
 .tip-box {
   background: #1a1a2e;
   border: 1px solid #2d3561;

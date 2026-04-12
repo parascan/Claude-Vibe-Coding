@@ -1,5 +1,7 @@
+import { useState } from "react";
+
 interface Props {
-  mode: "strength" | "cardio" | "beach-muscles" | "legs-day";
+  mode: "strength" | "cardio" | "beach-muscles" | "legs-day" | "pull-day";
   onStart: (minutes: number) => void;
   onBack: () => void;
 }
@@ -22,6 +24,11 @@ const CONFIG = {
     subtitle: "Quads, hamstrings & glutes — lower body dumbbell circuits.",
     tip: "Targets legs and glutes with squats, lunges, hinges, and bridges. Alternate with upper-body days for a complete program.",
   },
+  "pull-day": {
+    title: "💪 Pull Day",
+    subtitle: "Back & biceps — rows, curls & rear-chain dumbbell circuits.",
+    tip: "Pair with Beach Muscles (push) for a complete push/pull split. Back rows and bicep curls dominate the circuit.",
+  },
   cardio: {
     title: "🏃 Cardio",
     subtitle: "Pick a time and get 3 cardio options — no running required.",
@@ -31,6 +38,15 @@ const CONFIG = {
 
 export function TimeInput({ mode, onStart, onBack }: Props) {
   const cfg = CONFIG[mode];
+  const [custom, setCustom] = useState("");
+
+  function handleCustomSubmit() {
+    const val = parseInt(custom, 10);
+    if (!Number.isNaN(val) && val >= 5 && val <= 120) {
+      onStart(val);
+    }
+  }
+
   return (
     <div className="time-input-screen">
       <div className="workout-header" style={{ paddingTop: "0.5rem" }}>
@@ -57,6 +73,31 @@ export function TimeInput({ mode, onStart, onBack }: Props) {
               <span className="preset-label">min</span>
             </button>
           ))}
+        </div>
+
+        <div className="custom-time-row">
+          <input
+            className="custom-time-input"
+            type="number"
+            min={5}
+            max={120}
+            placeholder="Custom"
+            value={custom}
+            onChange={(e) => setCustom(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleCustomSubmit()}
+          />
+          <span className="custom-time-unit">min</span>
+          <button
+            className="custom-time-btn"
+            onClick={handleCustomSubmit}
+            disabled={
+              Number.isNaN(parseInt(custom, 10)) ||
+              parseInt(custom, 10) < 5 ||
+              parseInt(custom, 10) > 120
+            }
+          >
+            Go
+          </button>
         </div>
       </div>
 
