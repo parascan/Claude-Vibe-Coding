@@ -77,7 +77,7 @@ export function WorkoutDisplay({ workout, onReset }: Props) {
         <button className="back-btn" onClick={onReset}>
           ← New Workout
         </button>
-        <h2>Your Workout</h2>
+        <h2>{workout.label ?? "Your Workout"}</h2>
       </div>
 
       <div className="workout-summary">

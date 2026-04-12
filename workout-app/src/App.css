@@ -563,6 +563,11 @@ body {
   gap: 1rem;
 }
 
+/* Keep emoji slightly smaller so all 4 cards fit comfortably */
+.mode-grid .mode-emoji {
+  font-size: 2rem;
+}
+
 .mode-btn {
   background: #1c1c1c;
   border: 2px solid #2d2d2d;

@@ -1,5 +1,5 @@
 interface Props {
-  mode: "strength" | "cardio" | "beach-muscles";
+  mode: "strength" | "cardio" | "beach-muscles" | "legs-day";
   onStart: (minutes: number) => void;
   onBack: () => void;
 }
@@ -16,6 +16,11 @@ const CONFIG = {
     title: "🏖️ Beach Muscles",
     subtitle: "Chest, arms & abs — focused dumbbell circuits.",
     tip: "Targets chest, biceps, triceps, and core. Pairs well with leg days on alternating sessions.",
+  },
+  "legs-day": {
+    title: "🦵 Legs Day",
+    subtitle: "Quads, hamstrings & glutes — lower body dumbbell circuits.",
+    tip: "Targets legs and glutes with squats, lunges, hinges, and bridges. Alternate with upper-body days for a complete program.",
   },
   cardio: {
     title: "🏃 Cardio",

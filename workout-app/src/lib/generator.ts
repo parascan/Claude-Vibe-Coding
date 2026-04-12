@@ -15,6 +15,7 @@ export interface Workout {
   transitionSeconds: number;
   roundRestSeconds: number;
   estimatedCalories: number;
+  label?: string;
 }
 
 // How many stations fit in a given time budget
@@ -167,6 +168,14 @@ export function generateWorkout(availableMinutes: number, focusGroups?: MuscleGr
   // Rough calorie estimate: ~8 cal/min for circuit training at moderate intensity
   const estimatedCalories = Math.round(availableMinutes * 8);
 
+  const focusLabels: Record<string, string> = {
+    "arms,chest,core": "Beach Muscles Circuit",
+    "glutes,legs": "Legs Day Circuit",
+  };
+  const label = focusGroups
+    ? focusLabels[focusGroups.slice().sort().join(",")]
+    : undefined;
+
   return {
     stations,
     totalMinutes: availableMinutes,
@@ -176,5 +185,6 @@ export function generateWorkout(availableMinutes: number, focusGroups?: MuscleGr
     transitionSeconds: transitionSec,
     roundRestSeconds: roundRestSec,
     estimatedCalories,
+    label,
   };
 }
