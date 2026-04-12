@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { WorkoutStation } from "../lib/generator";
+import { getLastWeight, saveWeight } from "../lib/weightLog";
 
 interface Props {
   station: WorkoutStation;
@@ -25,6 +26,17 @@ export function ExerciseCard({ station, workSeconds, restSeconds, isActive, onSw
   const primaryMuscle = exercise.muscles[0];
   const color = MUSCLE_COLORS[primaryMuscle] ?? "#6b7280";
   const [showDemo, setShowDemo] = useState(false);
+  const [lastWeight] = useState(() => getLastWeight(exercise.id));
+  const [logWeight, setLogWeight] = useState(lastWeight ?? "");
+  const [saved, setSaved] = useState(false);
+
+  function handleSave() {
+    const trimmed = logWeight.trim();
+    if (!trimmed) return;
+    saveWeight(exercise.id, trimmed);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1500);
+  }
 
   return (
     <div className={`exercise-card ${isActive ? "active" : ""}`}>
@@ -62,6 +74,28 @@ export function ExerciseCard({ station, workSeconds, restSeconds, isActive, onSw
       </div>
 
       <p className="card-instructions">{exercise.instructions}</p>
+
+      {/* Weight logger */}
+      <div className="weight-log-row">
+        {lastWeight && (
+          <span className="weight-log-last">Last: {lastWeight}</span>
+        )}
+        <input
+          className="weight-log-input"
+          type="text"
+          placeholder={lastWeight ? `Last: ${lastWeight}` : "Log weight used…"}
+          value={logWeight}
+          onChange={(e) => setLogWeight(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSave()}
+        />
+        <button
+          className="weight-log-btn"
+          onClick={handleSave}
+          disabled={!logWeight.trim()}
+        >
+          {saved ? "✓" : "Save"}
+        </button>
+      </div>
 
       {exercise.demoImages && (
         <button

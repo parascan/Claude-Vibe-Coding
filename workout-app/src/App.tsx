@@ -5,6 +5,7 @@ import { WorkoutDisplay } from "./components/WorkoutDisplay";
 import { CardioDisplay } from "./components/CardioDisplay";
 import { CardioRoutePlanner } from "./components/CardioRoutePlanner";
 import { CardioTimer } from "./components/CardioTimer";
+import { WeeklyPlanner } from "./components/WeeklyPlanner";
 import { generateWorkout } from "./lib/generator";
 import { generateCardioSessions } from "./lib/cardioGenerator";
 import type { Workout } from "./lib/generator";
@@ -15,6 +16,7 @@ type Mode = "strength" | "cardio" | "beach-muscles" | "legs-day" | "pull-day";
 
 export default function App() {
   const [mode, setMode] = useState<Mode | null>(null);
+  const [showPlanner, setShowPlanner] = useState(false);
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [cardioSessions, setCardioSessions] = useState<CardioSession[] | null>(null);
   const [activeCardioSession, setActiveCardioSession] = useState<CardioSession | null>(null);
@@ -24,15 +26,15 @@ export default function App() {
     setMode(selected);
   }
 
-  function handleStart(minutes: number) {
+  function handleStart(minutes: number, workSec?: number, restSec?: number) {
     if (mode === "strength") {
-      setWorkout(generateWorkout(minutes));
+      setWorkout(generateWorkout(minutes, undefined, workSec, restSec));
     } else if (mode === "beach-muscles") {
-      setWorkout(generateWorkout(minutes, ["chest", "arms", "core"]));
+      setWorkout(generateWorkout(minutes, ["chest", "arms", "core"], workSec, restSec));
     } else if (mode === "legs-day") {
-      setWorkout(generateWorkout(minutes, ["legs", "glutes"]));
+      setWorkout(generateWorkout(minutes, ["legs", "glutes"], workSec, restSec));
     } else if (mode === "pull-day") {
-      setWorkout(generateWorkout(minutes, ["back", "arms"]));
+      setWorkout(generateWorkout(minutes, ["back", "arms"], workSec, restSec));
     } else {
       setCardioSessions(generateCardioSessions(minutes));
     }
@@ -55,8 +57,11 @@ export default function App() {
 
   return (
     <div className="app">
-      {mode === null && (
-        <ModeSelect onSelect={handleModeSelect} />
+      {mode === null && !showPlanner && (
+        <ModeSelect onSelect={handleModeSelect} onPlan={() => setShowPlanner(true)} />
+      )}
+      {showPlanner && (
+        <WeeklyPlanner onBack={() => setShowPlanner(false)} />
       )}
       {mode !== null && workout === null && cardioSessions === null && (
         <TimeInput mode={mode} onStart={handleStart} onBack={handleBackToMode} />

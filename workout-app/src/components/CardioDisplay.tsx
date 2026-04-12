@@ -41,7 +41,11 @@ export function CardioDisplay({ sessions, onReset, onStartTimer }: Props) {
               <div className="cardio-meta">
                 <span className="cardio-cal">~{session.estimatedCalories} cal</span>
                 <span className={`cardio-equip equip-${session.activity.equipment}`}>
-                  {session.activity.equipment === "road" ? "🛣️ Road" : "🚴 Peloton"}
+                  {session.activity.equipment === "road"
+                    ? "🛣️ Road"
+                    : session.activity.equipment === "peloton"
+                    ? "🚴 Peloton"
+                    : "🏠 Alternative"}
                 </span>
               </div>
             </div>
