@@ -4,11 +4,6 @@ on:
   push:
     branches:
       - main
-      - claude/add-claude-documentation-ydJG1
-      - claude/add-claude-documentation-7SRJC
-    paths:
-      - 'workout-app/**'
-      - 'wishlist-app/**'
   workflow_dispatch:
 
 permissions:
@@ -45,6 +40,7 @@ jobs:
           mkdir -p _site/kids-wishlist
           cp -r workout-app/dist/. _site/
           cp -r wishlist-app/dist/. _site/kids-wishlist/
+          touch _site/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
