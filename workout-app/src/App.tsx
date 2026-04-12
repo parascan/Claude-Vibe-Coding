@@ -11,7 +11,7 @@ import type { Workout } from "./lib/generator";
 import type { CardioSession } from "./lib/cardioGenerator";
 import "./App.css";
 
-type Mode = "strength" | "cardio";
+type Mode = "strength" | "cardio" | "beach-muscles";
 
 export default function App() {
   const [mode, setMode] = useState<Mode | null>(null);
@@ -27,6 +27,8 @@ export default function App() {
   function handleStart(minutes: number) {
     if (mode === "strength") {
       setWorkout(generateWorkout(minutes));
+    } else if (mode === "beach-muscles") {
+      setWorkout(generateWorkout(minutes, ["chest", "arms", "core"]));
     } else {
       setCardioSessions(generateCardioSessions(minutes));
     }

@@ -37,22 +37,33 @@ function calcStationCount(
 }
 
 // Pick a balanced set of exercises covering different muscle groups
-function selectExercises(count: number, includeCardio: boolean): Exercise[] {
-  const pool = includeCardio
+function selectExercises(count: number, includeCardio: boolean, focusGroups?: MuscleGroup[]): Exercise[] {
+  const basePool = includeCardio
     ? EXERCISES
     : EXERCISES.filter((e) => !e.isCardio);
 
+  // For focused workouts, limit pool to exercises whose primary muscle is relevant
+  const allowedGroups = focusGroups
+    ? ([...focusGroups, "shoulders", "back", "full-body"] as MuscleGroup[])
+    : null;
+  const pool = allowedGroups
+    ? basePool.filter((e) => allowedGroups.includes(e.muscles[0]))
+    : basePool;
+
   // Ensure muscle group variety using a priority rotation
-  const priorityGroups: MuscleGroup[] = [
-    "legs",
-    "back",
-    "chest",
-    "core",
-    "shoulders",
-    "glutes",
-    "full-body",
-    "arms",
-  ];
+  // For focused workouts, repeat the focus groups to fill most slots
+  const priorityGroups: MuscleGroup[] = focusGroups
+    ? [...focusGroups, "shoulders", ...focusGroups, "back", ...focusGroups]
+    : [
+        "legs",
+        "back",
+        "chest",
+        "core",
+        "shoulders",
+        "glutes",
+        "full-body",
+        "arms",
+      ];
 
   const selected: Exercise[] = [];
   const usedIds = new Set<string>();
@@ -110,7 +121,7 @@ function spreadExercises(exercises: Exercise[]): Exercise[] {
   return result;
 }
 
-export function generateWorkout(availableMinutes: number): Workout {
+export function generateWorkout(availableMinutes: number, focusGroups?: MuscleGroup[]): Workout {
   // Adjust intensity settings based on time
   let rounds: number;
   let workSec: number;
@@ -146,7 +157,7 @@ export function generateWorkout(availableMinutes: number): Workout {
   );
 
   const includeCardio = availableMinutes >= 10;
-  const exercises = selectExercises(stationCount, includeCardio);
+  const exercises = selectExercises(stationCount, includeCardio, focusGroups);
 
   const stations: WorkoutStation[] = exercises.map((exercise, i) => ({
     exercise,

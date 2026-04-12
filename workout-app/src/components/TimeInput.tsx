@@ -1,5 +1,5 @@
 interface Props {
-  mode: "strength" | "cardio";
+  mode: "strength" | "cardio" | "beach-muscles";
   onStart: (minutes: number) => void;
   onBack: () => void;
 }
@@ -11,6 +11,11 @@ const CONFIG = {
     title: "🏋️ Strength Circuit",
     subtitle: "Dumbbell circuits with Spartacus-style intervals.",
     tip: "Spartacus-style circuits are great for fat loss. Aim for 3–4 sessions/week. Each workout adapts to your time.",
+  },
+  "beach-muscles": {
+    title: "🏖️ Beach Muscles",
+    subtitle: "Chest, arms & abs — focused dumbbell circuits.",
+    tip: "Targets chest, biceps, triceps, and core. Pairs well with leg days on alternating sessions.",
   },
   cardio: {
     title: "🏃 Cardio",

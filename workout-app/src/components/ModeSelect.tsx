@@ -1,5 +1,5 @@
 interface Props {
-  onSelect: (mode: "strength" | "cardio") => void;
+  onSelect: (mode: "strength" | "cardio" | "beach-muscles") => void;
 }
 
 export function ModeSelect({ onSelect }: Props) {
@@ -19,6 +19,14 @@ export function ModeSelect({ onSelect }: Props) {
           <span className="mode-title">Strength Circuit</span>
           <span className="mode-desc">
             Dumbbell circuits with Spartacus-style intervals
+          </span>
+        </button>
+
+        <button className="mode-btn" onClick={() => onSelect("beach-muscles")}>
+          <span className="mode-emoji">🏖️</span>
+          <span className="mode-title">Beach Muscles</span>
+          <span className="mode-desc">
+            Chest, arms & abs focus — the mirror muscles
           </span>
         </button>
 
