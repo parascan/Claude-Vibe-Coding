@@ -123,31 +123,28 @@ function spreadExercises(exercises: Exercise[]): Exercise[] {
   return result;
 }
 
-export function generateWorkout(availableMinutes: number, focusGroups?: MuscleGroup[]): Workout {
-  // Adjust intensity settings based on time
+export function generateWorkout(
+  availableMinutes: number,
+  focusGroups?: MuscleGroup[],
+  customWorkSec?: number,
+  customRestSec?: number
+): Workout {
+  // Adjust round count based on time
   let rounds: number;
-  let workSec: number;
-  let restSec: number;
   const transitionSec = 15;
   const roundRestSec = 120; // 2 min between rounds
 
   if (availableMinutes <= 15) {
     rounds = 1;
-    workSec = 60;
-    restSec = 15;
-  } else if (availableMinutes <= 25) {
-    rounds = 2;
-    workSec = 60;
-    restSec = 15;
   } else if (availableMinutes <= 40) {
     rounds = 2;
-    workSec = 60;
-    restSec = 15;
   } else {
     rounds = 3;
-    workSec = 60;
-    restSec = 15;
   }
+
+  // Use caller-supplied timing or fall back to standard defaults
+  const workSec = customWorkSec ?? 60;
+  const restSec = customRestSec ?? 15;
 
   const stationCount = calcStationCount(
     availableMinutes,

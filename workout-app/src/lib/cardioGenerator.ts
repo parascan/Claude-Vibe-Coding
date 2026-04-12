@@ -125,19 +125,17 @@ function buildIntervals(
   return intervals;
 }
 
+function pickRandom<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 export function generateCardioSessions(minutes: number): CardioSession[] {
-  // Always include at least one road and one Peloton option
+  // Always show 1 road run, 1 Peloton ride, and 1 alternative activity
   const road = CARDIO_ACTIVITIES.filter((a) => a.equipment === "road");
   const peloton = CARDIO_ACTIVITIES.filter((a) => a.equipment === "peloton");
+  const other = CARDIO_ACTIVITIES.filter((a) => a.equipment === "other");
 
-  const shuffledRoad = [...road].sort(() => Math.random() - 0.5);
-  const shuffledPeloton = [...peloton].sort(() => Math.random() - 0.5);
-
-  // 2 road + 1 Peloton, or 1 road + 2 Peloton — alternate each call via random
-  const picked =
-    Math.random() < 0.5
-      ? [shuffledRoad[0], shuffledRoad[1], shuffledPeloton[0]]
-      : [shuffledRoad[0], shuffledPeloton[0], shuffledPeloton[1]];
+  const picked = [pickRandom(road), pickRandom(peloton), pickRandom(other)];
 
   return picked.map((activity) => ({
     activity,

@@ -1,8 +1,16 @@
 import { useState } from "react";
 
+type Intensity = "beginner" | "standard" | "intense";
+
+const INTENSITIES: Record<Intensity, { label: string; workSec: number; restSec: number; desc: string }> = {
+  beginner: { label: "Beginner", workSec: 40, restSec: 20, desc: "40s on · 20s off" },
+  standard: { label: "Standard", workSec: 60, restSec: 15, desc: "60s on · 15s off" },
+  intense:  { label: "Intense",  workSec: 60, restSec: 8,  desc: "60s on · 8s off"  },
+};
+
 interface Props {
   mode: "strength" | "cardio" | "beach-muscles" | "legs-day" | "pull-day";
-  onStart: (minutes: number) => void;
+  onStart: (minutes: number, workSec?: number, restSec?: number) => void;
   onBack: () => void;
 }
 
@@ -36,15 +44,25 @@ const CONFIG = {
   },
 };
 
+const isStrengthMode = (mode: string) => mode !== "cardio";
+
 export function TimeInput({ mode, onStart, onBack }: Props) {
   const cfg = CONFIG[mode];
   const [custom, setCustom] = useState("");
+  const [intensity, setIntensity] = useState<Intensity>("standard");
+
+  function go(minutes: number) {
+    if (isStrengthMode(mode)) {
+      const { workSec, restSec } = INTENSITIES[intensity];
+      onStart(minutes, workSec, restSec);
+    } else {
+      onStart(minutes);
+    }
+  }
 
   function handleCustomSubmit() {
     const val = parseInt(custom, 10);
-    if (!Number.isNaN(val) && val >= 5 && val <= 120) {
-      onStart(val);
-    }
+    if (!Number.isNaN(val) && val >= 5 && val <= 120) go(val);
   }
 
   return (
@@ -60,6 +78,24 @@ export function TimeInput({ mode, onStart, onBack }: Props) {
         <p className="subtitle">{cfg.subtitle}</p>
       </div>
 
+      {isStrengthMode(mode) && (
+        <div className="intensity-section">
+          <h2>Intensity</h2>
+          <div className="intensity-grid">
+            {(Object.keys(INTENSITIES) as Intensity[]).map((key) => (
+              <button
+                key={key}
+                className={`intensity-btn${intensity === key ? " active" : ""}`}
+                onClick={() => setIntensity(key)}
+              >
+                <span className="intensity-label">{INTENSITIES[key].label}</span>
+                <span className="intensity-desc">{INTENSITIES[key].desc}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="preset-section">
         <h2>How much time do you have?</h2>
         <div className="preset-grid">
@@ -67,7 +103,7 @@ export function TimeInput({ mode, onStart, onBack }: Props) {
             <button
               key={min}
               className="preset-btn"
-              onClick={() => onStart(min)}
+              onClick={() => go(min)}
             >
               <span className="preset-min">{min}</span>
               <span className="preset-label">min</span>

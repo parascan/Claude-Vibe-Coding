@@ -2,7 +2,7 @@ export interface CardioActivity {
   id: string;
   name: string;
   emoji: string;
-  equipment: "road" | "peloton";
+  equipment: "road" | "peloton" | "other";
   tagline: string;
   caloriesPerMin: number;
   tip: string;
@@ -83,6 +83,77 @@ export const CARDIO_ACTIVITIES: CardioActivity[] = [
       easy: "Brisk walk, purposeful pace",
       moderate: "Easy jog, comfortable breathing",
       hard: "Moderate run, breathing elevated",
+    },
+  },
+  // ── Other / alternative cardio ────────────────────────────────────────────
+  {
+    id: "swimming-laps",
+    name: "Lap Swimming",
+    emoji: "🏊",
+    equipment: "other",
+    tagline: "Full-body, zero-impact — the ultimate cross-training",
+    caloriesPerMin: 11,
+    tip: "Alternate strokes to hit different muscle groups. Freestyle for speed, breaststroke for technique, backstroke for active recovery between hard laps.",
+    effort: {
+      easy: "Easy freestyle, relaxed breathing every 3 strokes",
+      moderate: "Steady pace, controlled turns, 70% effort",
+      hard: "All-out sprint laps — push off the wall hard and maintain speed",
+    },
+  },
+  {
+    id: "rowing-machine",
+    name: "Rowing Machine",
+    emoji: "🚣",
+    equipment: "other",
+    tagline: "86% of your muscles — legs, back, and arms in one stroke",
+    caloriesPerMin: 12,
+    tip: "Order of the stroke: legs → body lean → arms. On the recovery: arms → body → legs. Most beginners rush the recovery — slow down on the way back.",
+    effort: {
+      easy: "18-20 SPM, damper 3-4, controlled rhythm",
+      moderate: "22-24 SPM, damper 4-5, push through each drive",
+      hard: "26-28 SPM, damper 5-6, maximum power per stroke",
+    },
+  },
+  {
+    id: "elliptical",
+    name: "Elliptical",
+    emoji: "🔄",
+    equipment: "other",
+    tagline: "Low-impact steady state — great on recovery days",
+    caloriesPerMin: 9,
+    tip: "Use the handlebars actively — push and pull to engage your upper body. Going backwards targets your glutes and hamstrings more.",
+    effort: {
+      easy: "Low resistance, 60-70 RPM, comfortable breathing",
+      moderate: "Moderate resistance, 70-80 RPM, slight incline",
+      hard: "High resistance or incline, 75-85 RPM, pushing hard",
+    },
+  },
+  {
+    id: "jump-rope",
+    name: "Jump Rope",
+    emoji: "🪢",
+    equipment: "other",
+    tagline: "Deceptively brutal — world-class cardio in your living room",
+    caloriesPerMin: 13,
+    tip: "Keep jumps small — just enough clearance for the rope. Land on the balls of your feet, not flat-footed. Start with 30s on / 30s rest if you're new to it.",
+    effort: {
+      easy: "Basic bounce, single-unders, steady rhythm",
+      moderate: "Faster cadence, alternate feet, 90-110 RPM",
+      hard: "Double-unders or max-speed single-unders — full effort",
+    },
+  },
+  {
+    id: "stair-climber",
+    name: "Stair Climber / Box Steps",
+    emoji: "🪜",
+    equipment: "other",
+    tagline: "Vertical work — crushes glutes and elevates heart rate fast",
+    caloriesPerMin: 11,
+    tip: "Don't lean on the handles — that unloads your legs and cheats the calorie burn. Stand tall, drive through your heel on each step.",
+    effort: {
+      easy: "Slow climb, level 4-6, easy breathing",
+      moderate: "Steady climb, level 7-9, elevated heart rate",
+      hard: "Fast climb or skipping steps, level 10-12, pushing hard",
     },
   },
   // ── Peloton options ───────────────────────────────────────────────────────

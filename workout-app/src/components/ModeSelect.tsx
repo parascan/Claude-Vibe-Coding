@@ -1,8 +1,9 @@
 interface Props {
   onSelect: (mode: "strength" | "cardio" | "beach-muscles" | "legs-day" | "pull-day") => void;
+  onPlan: () => void;
 }
 
-export function ModeSelect({ onSelect }: Props) {
+export function ModeSelect({ onSelect, onPlan }: Props) {
   return (
     <div className="mode-select-screen">
       <div className="hero">
@@ -54,6 +55,10 @@ export function ModeSelect({ onSelect }: Props) {
           </span>
         </button>
       </div>
+
+      <button className="plan-week-btn" onClick={onPlan}>
+        📅 Plan Your Week
+      </button>
     </div>
   );
 }

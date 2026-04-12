@@ -87,6 +87,54 @@ body {
   margin-top: 0.25rem;
 }
 
+/* ===== Intensity selector ===== */
+.intensity-section h2 {
+  font-size: 1.1rem;
+  color: #d1d5db;
+  margin-bottom: 0.75rem;
+}
+
+.intensity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.intensity-btn {
+  background: #1c1c1c;
+  border: 2px solid #2d2d2d;
+  border-radius: 10px;
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.65rem 0.5rem;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.intensity-btn.active {
+  border-color: #e07b39;
+  background: #2a1a0e;
+  color: #f0f0f0;
+}
+
+.intensity-btn:hover:not(.active) {
+  border-color: #4b5563;
+  color: #d1d5db;
+}
+
+.intensity-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.intensity-desc {
+  font-size: 0.68rem;
+  opacity: 0.75;
+}
+
 .custom-time-row {
   display: flex;
   align-items: center;
@@ -331,6 +379,67 @@ body {
   font-size: 0.85rem;
   line-height: 1.55;
   padding: 0 1rem 0.75rem 1rem;
+}
+
+/* Weight logger */
+.weight-log-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  border-top: 1px solid #1e1e1e;
+}
+
+.weight-log-last {
+  font-size: 0.72rem;
+  color: #10b981;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.weight-log-input {
+  background: #111;
+  border: 1px solid #2d2d2d;
+  border-radius: 6px;
+  color: #f0f0f0;
+  flex: 1;
+  font-size: 0.78rem;
+  padding: 0.3rem 0.5rem;
+  outline: none;
+  min-width: 0;
+  transition: border-color 0.15s;
+}
+
+.weight-log-input:focus {
+  border-color: #e07b39;
+}
+
+.weight-log-input::placeholder {
+  color: #4b5563;
+}
+
+.weight-log-btn {
+  background: #2d2d2d;
+  border: none;
+  border-radius: 6px;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.3rem 0.6rem;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.weight-log-btn:hover:not(:disabled) {
+  background: #e07b39;
+  color: white;
+}
+
+.weight-log-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .card-tip {
@@ -745,6 +854,11 @@ body {
 .equip-peloton {
   background: #1a1a2e;
   color: #93c5fd;
+}
+
+.equip-other {
+  background: #2e1a2e;
+  color: #e9a8f0;
 }
 
 .cardio-intervals {
@@ -1258,6 +1372,126 @@ body {
   font-size: 0.9rem;
   padding: 1rem 0;
   text-align: center;
+}
+
+/* ===== Plan Week button ===== */
+.plan-week-btn {
+  background: none;
+  border: 1px solid #2d2d2d;
+  border-radius: 10px;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  width: 100%;
+  transition: border-color 0.15s, color 0.15s;
+}
+.plan-week-btn:hover {
+  border-color: #4b5563;
+  color: #f0f0f0;
+}
+
+/* ===== Weekly Planner ===== */
+.planner-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 2rem;
+}
+
+.planner-subtitle {
+  color: #9ca3af;
+  font-size: 0.88rem;
+  margin-top: -0.5rem;
+}
+
+.planner-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.planner-day {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #1c1c1c;
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+}
+
+.planner-day-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6b7280;
+  width: 2rem;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.planner-day-options {
+  display: flex;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.planner-option-btn {
+  background: #111;
+  border: 2px solid #2d2d2d;
+  border-radius: 6px;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.3rem 0.4rem;
+  transition: border-color 0.12s, background 0.12s, color 0.12s;
+  flex-shrink: 0;
+}
+
+.planner-option-btn:hover:not(.active) {
+  border-color: #4b5563;
+}
+
+.planner-day-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  width: 5rem;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.planner-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #1c1c1c;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.planner-sep {
+  color: #374151;
+}
+
+.planner-reset-btn {
+  background: none;
+  border: 1px solid #2d2d2d;
+  border-radius: 8px;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 0.82rem;
+  padding: 0.55rem 1rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.planner-reset-btn:hover {
+  color: #d1d5db;
+  border-color: #4b5563;
 }
 
 /* ===== Mobile tweaks ===== */
